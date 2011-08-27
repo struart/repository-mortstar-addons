@@ -28,7 +28,7 @@
 	<!-- TomatoMeter from All Critics -->
 	<ParseRTTomAll dest="5">
 		<RegExp input="$$1" output="&lt;details&gt;&lt;rating max=&quot;100&quot;&gt;\1&lt;/rating&gt;&lt;votes&gt;\2&lt;/votes&gt;&lt;/details&gt;" dest="5">
-			<expression noclean="1">v:average&quot;&gt;.*?([0-9]+).*?count&quot;&gt;([0-9]+)</expression>
+			<expression noclean="1">&quot;all-critics-numbers&quot;.*?([0-9]+).*?Reviews Counted:.*?([0-9]+)</expression>
 		</RegExp>
 	</ParseRTTomAll>
 
@@ -36,7 +36,7 @@
 	<ParseRTTomTop dest="5">
 		<!--Grabs All Critics first in case Top Critics is empty-->
 		<RegExp input="$$1" output="&lt;details&gt;&lt;rating max=&quot;100&quot;&gt;\1&lt;/rating&gt;&lt;votes&gt;\2&lt;/votes&gt;&lt;/details&gt;" dest="5">
-			<expression noclean="1">v:average&quot;&gt;.*?([0-9]+).*?count&quot;&gt;([0-9]+)</expression>
+			<expression noclean="1">&quot;all-critics-numbers&quot;.*?([0-9]+).*?Reviews Counted:.*?([0-9]+)</expression>
 		</RegExp>
 		<RegExp input="$$1" output="&lt;details&gt;&lt;rating max=&quot;100&quot;&gt;\1&lt;/rating&gt;&lt;votes&gt;\2&lt;/votes&gt;&lt;/details&gt;" dest="5">
 			<expression noclean="1">&quot;top-critics-numbers&quot;.*?([0-9]+).*?Critic Reviews: ([0-9]+)</expression>
@@ -46,7 +46,7 @@
 	<!-- Average Rating from All Critics -->
 	<ParseRTAveAll dest="5">
 		<RegExp input="$$1" output="&lt;details&gt;&lt;rating&gt;\1&lt;/rating&gt;&lt;votes&gt;\2&lt;/votes&gt;&lt;/details&gt;" dest="5">
-			<expression noclean="1">&lt;p class=&quot;critic_stats&quot;&gt;.*?([0-9.]+).*?count&quot;&gt;([0-9]+)</expression>
+			<expression noclean="1">&quot;all-critics-numbers&quot;.*?Average.*?([0-9.]+).*?Reviews Counted:.*?([0-9]+)</expression>
 		</RegExp>
 	</ParseRTAveAll>
 
@@ -54,7 +54,7 @@
 	<ParseRTAveTop dest="5">
 		<!--Grabs All Critics first in case Top Critics is empty-->
 		<RegExp input="$$1" output="&lt;details&gt;&lt;rating&gt;\1&lt;/rating&gt;&lt;votes&gt;\2&lt;/votes&gt;&lt;/details&gt;" dest="5">
-			<expression noclean="1">&lt;p class=&quot;critic_stats&quot;&gt;.*?([0-9.]+).*?count&quot;&gt;([0-9]+)</expression>
+			<expression noclean="1">&quot;all-critics-numbers&quot;.*?Average.*?([0-9.]+).*?Reviews Counted:.*?([0-9]+)</expression>
 		</RegExp>
 		<RegExp input="$$1" output="&lt;details&gt;&lt;rating&gt;\1&lt;/rating&gt;&lt;votes&gt;\2&lt;/votes&gt;&lt;/details&gt;" dest="5">
 			<expression noclean="1">&quot;top-critics-numbers&quot;.*?Average.*?([0-9.]+).*?Critic Reviews: ([0-9]+)</expression>
