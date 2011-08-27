@@ -73,3 +73,6 @@ elif mode==4:
     __navigator__.list_channel_schedules(url)
 elif mode==5:
     __navigator__.play_stream(url)
+elif mode==6:
+    __navigator__.list_daily_schedule(url)
+

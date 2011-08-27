@@ -1,3 +1,7 @@
+[B]Version 1.7.4[/B]
+- fixed channel schedule naming due to change in website, let's hope this is the final time!
+- removed Live Now feature, it was shit
+
 [B]Version 1.7.3[/B]
 - fixed channel schedule naming due to change in website
 

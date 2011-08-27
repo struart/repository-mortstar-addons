@@ -32,10 +32,9 @@ class LOF_Scraper:
         self.match_comp_regex = '<td align="left" valign="top"><span class="title">(.+?)</span><br/>(.+?)<br />'
         self.match_chan_regex = '<a href="watchlive/\?(.+?)">(.+?)</a>'
         self.offline_regex = 'offline.jpg'
-        self.channel_regex = '<td height="40" align="center" valign="middle" bgcolor="(.+?)" ><strong><a href="http://www.liveonlinefooty.com/watchlive/\?(.*?)" target="_top">(.*?)</a></strong></td>'
+        self.channel_regex = '<td height=".+?" align=".+?" valign=".+?" bgcolor=".+?" ><strong><a href="(.+?)" target=".+?">(.+?)</a><'
         self.channel_type_regex = '<iframe src=\"http://www.liveonlinefooty.com/channels/stream(.+?).php'
         self.channel_menu_regex = '<iframe src="(.+?)/channelmenu.php'
-        self.live_channel_regex = '<td height="40" align="center" valign="middle" bgcolor="#00FF66" ><strong><a href="http://www.liveonlinefooty.com/watchlive/\?(.*?)" target="_top">(.+?)</a></strong></td>'
 
         # Regex Statements
         self.unapwd = re.compile(self.unapwd_regex, re.DOTALL|re.M)
@@ -53,7 +52,6 @@ class LOF_Scraper:
         self.channel = re.compile(self.channel_regex, re.DOTALL|re.M)
         self.channeltype = re.compile(self.channel_type_regex, re.DOTALL|re.M)
         self.channelmenu = re.compile(self.channel_menu_regex, re.DOTALL|re.M)
-        self.livechannel = re.compile(self.live_channel_regex, re.DOTALL|re.M)
         self.cleantags = re.compile('<.*?>', re.M)
         self.striptime = re.compile('\d{1,2}:\d{1,2}')
         
@@ -122,28 +120,16 @@ class LOF_Scraper:
     def channels(self, channelPage):
         __navigator__ = LOF_Navigator.LOF_Navigator()
         for each_channel in self.channel.finditer(channelPage):
-            title = self.cleantags.sub('', each_channel.group(3))
+            title = self.cleantags.sub('', each_channel.group(2))
             title = self.striptime.sub('', title)
             slist = [title.lstrip(' ')]
             isPlayable = 'true'
-            chanId = self.channelurl %each_channel.group(2)
+            chanId = self.channelurl %each_channel.group(1)
             isFolder=False
             playUrl = urllib.quote_plus(chanId)
             mode = '5'
             __navigator__.add_nav_item(slist, isPlayable, chanId, isFolder, playUrl, mode)
 
-    def livenow(self, channelPage):
-        __navigator__ = LOF_Navigator.LOF_Navigator()
-        for each_live_channel in self.livechannel.finditer(channelPage):
-            title = self.striptime.sub('', each_live_channel.group(2))
-            slist = [title.lstrip(' ')]
-            isPlayable = 'true'
-            chanId = self.channelurl %each_live_channel.group(1)
-            isFolder=False
-            playUrl = urllib.quote_plus(chanId)
-            mode = '5'
-            __navigator__.add_nav_item(slist, isPlayable, chanId, isFolder, playUrl, mode)
-            
     def schedules(self, schedulePage):
         __navigator__ = LOF_Navigator.LOF_Navigator()
         for each_event in self.schedule.finditer(schedulePage):

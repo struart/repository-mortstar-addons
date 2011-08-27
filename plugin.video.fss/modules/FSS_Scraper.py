@@ -4,6 +4,11 @@ import sys
 import urllib
 import re
 import time
+import datetime
+from datetime import date
+from datetime import timedelta
+from datetime import tzinfo
+from time import strptime
 
 import FSS_Navigator
 
@@ -16,6 +21,7 @@ class FSS_Scraper:
         self.memberurl = ''.join([self.baseurl, 'forum/view.php?pg=home&styleid=1'])
         self.channelurl = ''.join([self.baseurl, 'forum/view.php?pg=vip%s'])
         self.scheduleurl = ''.join([self.baseurl, 'forum/calendar.php'])
+        self.dailyscheduleurl = ''.join([self.baseurl, 'forum/calendar.php?do=getinfo&day=%s&c=1'])
 
         # Regex Patterns
         self.unapwd_regex = '<strong>Welcome, (.+?).</strong><br />'
@@ -23,18 +29,37 @@ class FSS_Scraper:
         self.rtmpaddress_regex = 'streamer=(.+?)&amp;type=video'
         self.appurl_regex = 'rtmp://(.+?)/(.+?)&amp;type=video'
         self.playurl_regex = 'flashvars="file=(.+?)&amp;streamer'
-        self.schedule_regex = '<a href=\"calendar.php\?do=getinfo&amp;e=.+?</a>'
-        self.event_regex = '<a href=\"calendar.php\?do=getinfo&amp;e=.+?</a>'
-        
+        self.stripchannels_regex = '\(VIP.+?\)|\d{1,2}[A|P]M|\d{1,2}[:|.]\d{1,2}[A|P]M'
+        self.category_regex = '(.+?) - (.+?)'
+        self.channel_regex = 'CLICK HERE FOR VIP(.*?)<'
+        self.reoccuring_event_regex = 'occurs'
+        self.multiday_event_regex = 'to'
+        self.event_dst_regex = 'This event ignores DST'
+        self.event_regex = '<form action="calendar.php\?do=manage&amp;e=(.+?)</form>'
+        self.eventcat_regex = '<td class="tcat">(.+?) -'
+        self.eventtitle_regex = '<td class="tcat".+? - (.+?)</td>'
+#        self.eventdate_regex = '</div>(.*?)<span class="time">| <br />'
+        self.eventdate_regex = '<div class="smallfont">(.+?)<.+?</div>'
+        self.eventtime_regex = '><span class="time">(.+?)</span> to <span class="time">(.+?)</span>'
+
         # Regex Statements
         self.unapwd = re.compile(self.unapwd_regex, re.DOTALL|re.M)
         self.embedstring = re.compile(self.embedstring_regex, re.DOTALL|re.M)
         self.rtmpaddress = re.compile(self.rtmpaddress_regex, re.DOTALL|re.M)
         self.appurl = re.compile(self.appurl_regex, re.DOTALL|re.M)
         self.playurl = re.compile(self.playurl_regex, re.DOTALL|re.M)
-        self.schedule = re.compile(self.schedule_regex, re.DOTALL|re.M)
-        self.event = re.compile(self.event_regex, re.DOTALL|re.M)
-        
+        self.stripchannel = re.compile(self.stripchannels_regex, re.DOTALL|re.M|re.IGNORECASE)
+        self.category = re.compile(self.category_regex, re.DOTALL|re.M)
+        self.channel = re.compile(self.channel_regex, re.DOTALL|re.M)
+        self.reoccuring_event = re.compile(self.reoccuring_event_regex, re.M|re.DOTALL)
+        self.multiday_event = re.compile(self.multiday_event_regex, re.M|re.DOTALL)
+        self.event_dst = re.compile(self.event_dst_regex, re.M|re.DOTALL)
+        self.event = re.compile(self.event_regex, re.M|re.DOTALL)
+        self.eventcat = re.compile(self.eventcat_regex, re.M|re.DOTALL)
+        self.eventtitle = re.compile(self.eventtitle_regex, re.M|re.DOTALL)
+        self.eventdate = re.compile(self.eventdate_regex, re.M|re.DOTALL)
+        self.eventtime = re.compile(self.eventtime_regex, re.M|re.DOTALL)        
+
     def account_check(self, link):
         if self.unapwd.search(link)  == None:
             return False
@@ -46,6 +71,7 @@ class FSS_Scraper:
         rtmpaddress = self.rtmpaddress.search(embedstring).group(1)
         appurl = self.appurl.search(embedstring).group(2)
         playurl = self.playurl.search(embedstring).group(1)
+        playurl = re.sub('.flv', '', playurl)
         rtmpurl = ''.join([rtmpaddress,
                           ' playpath=', playurl,
                           ' app=', appurl,
@@ -63,90 +89,84 @@ class FSS_Scraper:
             isFolder=True
             playUrl = 'Whatever'
             mode = '4'
-            __navigator__.add_nav_item(slist, isPlayable, chanId, isFolder, playUrl, mode)
+            __navigator__.add_nav_item(slist,
+                                       isPlayable,
+                                       chanId,
+                                       isFolder,
+                                       playUrl,
+                                       mode)
 
-    def get_event_info(self, schedule):
-	matchhour = (self.matchtime.search(schedule)).group(1)
-	matchmin = (self.matchtime.search(schedule)).group(2)
-	matchtitle = (self.matchcomp.search(schedule)).group(1)
-	matchcomp = (self.matchcomp.search(schedule)).group(2)
-	matchday = (self.matchdate.search(schedule)).group(1)
-	matchdate = self.date_from_ordinal((self.matchdate.search(schedule)).group(2))
-	matchmonth = (self.matchdate.search(schedule)).group(3)
-	matchyear = time.strftime("%y")
-#	if match_month > time.strftime('%b'):
-#		match_year = str(int(match_year + 1))
-	convertedtime = self.convert_to_localtime([matchmonth,
-                                                    matchdate,
-                                                    matchyear,
-                                                    matchhour,
-                                                    matchmin])
-	eventinfo = ''.join([convertedtime, ' | ', matchtitle])
-	return eventinfo, matchtitle
-"""
-        self.sub_regex = '<a href="http://www.liveonlinefooty.com/watchlive/">(.+?)</a>'
-        self.rtmp_regex = '\'streamer\',\'(.+?)\'\)'
-        self.playpath_regex = '\'file\',\'(.+?)\'\)'
-        self.appurl_regex = 'rtmp://(.+?)/(.+?)\'\)'
-        self.urlhash_regex = 'hash=(.+?)&updateIt=true'
-        self.match_time_regex = '<td width="150" align="center" valign="middle">(.+?):(.+?)</td>'
-        self.match_date_regex = '<td width="150" align="center" valign="middle">(.+?) (.+?) (.+?)</td>'
-        self.match_comp_regex = '<td align="left" valign="top"><span class="title">(.+?)</span><br/>(.+?)<br />'
-        self.match_chan_regex = '<a href="watchlive/\?channel(.+?).php">(.+?)</a>'
-        self.offline_regex = 'offline.jpg'
-
-
-        self.sub = re.compile(self.sub_regex, re.DOTALL|re.M)
-        self.rtmp = re.compile(self.rtmp_regex, re.DOTALL|re.M)
-        self.playpath = re.compile(self.playpath_regex, re.DOTALL|re.M)
-        self.appurl = re.compile(self.appurl_regex, re.DOTALL|re.M)
-        self.urlhash = re.compile(self.urlhash_regex, re.DOTALL|re.M)
-        self.schedule = re.compile(self.schedule_regex, re.DOTALL|re.M)
-        self.matchtime = re.compile(self.match_time_regex, re.DOTALL|re.M)
-        self.matchdate = re.compile(self.match_date_regex)
-        self.matchcomp = re.compile(self.match_comp_regex, re.DOTALL|re.M)
-        self.matchchan = re.compile(self.match_chan_regex, re.DOTALL|re.M)
-        self.offline = re.compile(self.offline_regex, re.DOTALL|re.M)
-        
-
-
-
-
-    def date_from_ordinal(self, date):
-        date = date[0:-2]
-        if len(date) == 1:
-            date = '0' + date    
-        return date
-    
     def date_to_ordinal(self, date):
         if 10 <= date % 100 < 20:
             return str(date) + 'th'
         else:
             return  str(date) + {1 : 'st', 2 : 'nd', 3 : 'rd'}.get(date % 10, "th")
 
-    def convert_to_localtime(self, slist):
-        tc1 = time.strptime(''.join(slist), '%b%d%y%H%M')
-	tc2 = time.mktime(tc1)
-	tc3 = time.ctime(tc2 - time.timezone)
-	tc4 = time.strptime(tc3, '%a %b %d %H:%M:00 %Y')
-	orddate = self.date_to_ordinal(tc4.tm_mday)
-	tc5 = time.strftime('%H:%M | %a ' + orddate +' %b', tc4)
-	return tc5
-
-
-        
-    def channel_schedule(self, schedulePage, scraperUrl):
+    def convert_to_24h_clock(self, intime, meridian, date):
+        returndate = date
+        if meridian == 'PM':
+            returntime = ''.join([str(int(intime.split(':')[0]) + 12), ':', intime.split(':')[1]])
+            if returntime == '24:00':
+                returntime = '00:00'
+                time_tuple = time.strptime(date, "%m-%d-%Y")
+                dt_obj = datetime.datetime(*time_tuple[0:6])
+                date =  dt_obj + timedelta(days=1)
+                returndate = dt_obj.strftime("%m-%d-%Y")
+        else:
+            if intime == '12:00':
+                returntime = '00:00'
+            else:
+                returntime = intime
+        return returntime, returndate
+    
+    def get_schedule_item(self, schedulepage, date):
         __navigator__ = FSS_Navigator.FSS_Navigator()
-        event_regex = '<span class="title">' + scraperUrl + '(.+?)</td>'
-        event = re.compile(event_regex, re.DOTALL|re.M)
-        value = event.findall(schedulePage)[0]
-	for everyListedChannel in self.matchchan.finditer(value):
-            slist = [everyListedChannel.group(2)]
-            isPlayable = 'true'
-            chanId = everyListedChannel.group(1)
-            isFolder=False
-            playUrl = urllib.quote_plus(self.channelurl %chanId)
-            mode = '5'
-            __navigator__.add_nav_item(slist, isPlayable, chanId, isFolder, playUrl, mode)
+        str_searchdate = date
+        tt_searchdate = time.strptime(str_searchdate, "%Y-%m-%d %H:%M:%S")
+        str_searchdate = time.strftime("%m-%d-%Y", tt_searchdate)
+        
+        for each_event in self.event.finditer(schedulepage):
+            cat = self.eventcat.search(each_event.group(1)).group(1)
+            title = self.eventtitle.search(each_event.group(1)).group(1)
+            title = self.stripchannel.sub('', title).strip()
+            date = self.eventdate.search(each_event.group(1))
+            dates = date.group(1).strip()
+            dst = self.event_dst.search(each_event.group(1))
+            if dst == None:
+                isdst = True
+            else:
+                isdst = False
+            if self.reoccuring_event.search(dates) != None:
+                dates = str_searchdate
+            if self.multiday_event.search(dates) != None:
+                datesplit = re.split(' to ', dates)
+                startdate = datesplit[0]
+            else:
+                startdate = str_searchdate
+            etime = self.eventtime.search(each_event.group(1))
+            starthour = etime.group(1)
+            event_start = ''.join([startdate, ' ', starthour])
+            tt_event_start = time.strptime(event_start, "%m-%d-%Y %I:%M %p")
+            if isdst == False:
+                dt_event_start = datetime.datetime(*tt_event_start[0:6]) + datetime.timedelta(hours=1)
+                tt_event_start= dt_event_start.timetuple()
+            
+            for every_channel in self.channel.finditer(each_event.group(0)):
+#                slist = [cat, ' | ', title, '| ', starthour, ' - Live on VIP', every_channel.group(1)]
+                slist = [cat, ' | ', title, ' | ', starthour]
+                isPlayable = 'true'
+                chanId = every_channel.group(1)
+                isFolder=False
+                playUrl = urllib.quote_plus(self.channelurl %chanId)
+                mode = '5'
+                __navigator__.add_nav_item(slist,
+                                           isPlayable,
+                                           chanId,
+                                           isFolder,
+                                           playUrl,
+                                           mode)
 
-"""
+    def convert_2_fssurldate(self, date):
+        day = (date + timedelta(days=0)).timetuple()
+        day = ''.join([str(day.tm_year),'-',str(day.tm_mon),'-',str(day.tm_mday)])
+        return day

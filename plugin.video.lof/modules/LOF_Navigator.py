@@ -26,17 +26,6 @@ class LOF_Navigator:
                                            'amember_pass' : self.password,
                                            'submit' : 'Login'})
 
-    def list_livenow(self):
-        playerpage = self.login(__scraper__.channelmenuurl)
-        scrapeurl = __scraper__.channelmenu.search(playerpage)
-        if scrapeurl == None:
-            channelurl = ''.join([__scraper__.channelmenuurl, '/channelmenu.php'])
-        else:
-            channelurl = ''.join([__scraper__.channelmenu.search(playerpage).group(1), '/channelmenu.php'])
-        channelpage = self.login(channelurl)
-       	__scraper__.livenow(channelpage)
-        xbmcplugin.endOfDirectory(int(sys.argv[1]))
-        
     def list_channels(self):
         playerpage = self.login(__scraper__.channelmenuurl)
         scrapeurl = __scraper__.channelmenu.search(playerpage)
@@ -49,7 +38,7 @@ class LOF_Navigator:
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
     def list_schedule(self):
-       	schedulepage = (urllib2.urlopen(__scraper__.scheduleurl)).read()
+        schedulepage = self.login(__scraper__.scheduleurl)
        	__scraper__.schedules(schedulepage)
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
@@ -104,11 +93,6 @@ class LOF_Navigator:
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
     def menu(self):
-        u=sys.argv[0]+"?url=Live&mode=6"
-	listfolder = xbmcgui.ListItem('Live Now')
-	listfolder.setInfo('video', {'Title': 'Live Now'})
-	xbmcplugin.addDirectoryItem(int(sys.argv[1]), u, listfolder, isFolder=1)
-        
 	u=sys.argv[0]+"?url=Channels&mode=1"
 	listfolder = xbmcgui.ListItem('Channels')
 	listfolder.setInfo('video', {'Title': 'Channels'})

@@ -6,6 +6,14 @@ import urllib2
 import cookielib
 import md5
 
+import time
+import datetime
+
+from time import strftime
+from time import strptime
+from datetime import timedelta
+from datetime import date
+
 import xbmc
 import xbmcplugin
 import xbmcgui
@@ -30,7 +38,6 @@ class FSS_Navigator:
              'url' : __scraper__.memberurl,
              'vb_login_md5password' : self.passhash,
              'vb_login_md5password_utf' : self.passhash,
-#             's' : 'b8ca941beeca39c9b47a01e3d700bd34',
              'vb_login_username' : self.username,
              'vb_login_password' : 0})
         
@@ -46,8 +53,8 @@ class FSS_Navigator:
                             'Setanta Sports Canada',
                             'Setanta Sports Australia',
                             'ESPNU College Sports',
-                            'Unknown Channel',
-                            'WBC Boxing',
+                            'Sky News HD', # Channel is Silverlight - not supported
+                            'WBC Boxing', # Weird channel - not supported
                             'Fox Soccer Channel',
                             'Fox Soccer Plus']
 
@@ -81,10 +88,10 @@ class FSS_Navigator:
 	listfolder.setInfo('video', {'Title': 'Channels'})
 	xbmcplugin.addDirectoryItem(int(sys.argv[1]), u, listfolder, isFolder=1)
 
-#	u=sys.argv[0]+"?url=Schedule&mode=2"
-#	listfolder = xbmcgui.ListItem('Schedule')
-#	listfolder.setInfo('video', {'Title': 'Schedule'})
-#	xbmcplugin.addDirectoryItem(int(sys.argv[1]), u, listfolder, isFolder=1)
+	u=sys.argv[0]+"?url=Schedule&mode=2"
+	listfolder = xbmcgui.ListItem('Schedule')
+	listfolder.setInfo('video', {'Title': 'Schedule'})
+	xbmcplugin.addDirectoryItem(int(sys.argv[1]), u, listfolder, isFolder=1)
   
 	u=sys.argv[0]+"?url=Settings&mode=3"
 	listfolder = xbmcgui.ListItem('Settings')
@@ -94,16 +101,17 @@ class FSS_Navigator:
 	xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
     def list_channels(self):
-        for i in range (1,15):
+        for i in range (1,16):
             if i != 12:
-                slist = self.channelname[i-1]
-                isPlayable = 'true'
-                chanId = str(i)
-                isFolder=False
-                playUrl = urllib.quote_plus(__scraper__.channelurl %chanId)
-                mode = '5'
-                self.add_nav_item(slist, isPlayable, chanId, isFolder, playUrl, mode)
-	xbmcplugin.endOfDirectory(int(sys.argv[1]))
+                if i != 13:
+                    slist = self.channelname[i-1]
+                    isPlayable = 'true'
+                    chanId = str(i)
+                    isFolder=False
+                    playUrl = urllib.quote_plus(__scraper__.channelurl %chanId)
+                    mode = '5'
+                    self.add_nav_item(slist, isPlayable, chanId, isFolder, playUrl, mode)
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
     def add_nav_item(self, slist, isPlayable, chanId, isfolder, playUrl, mode):
         label = ''.join(slist)
@@ -121,13 +129,25 @@ class FSS_Navigator:
         return xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
 
     def list_schedule(self):
-       	schedulepage = self.login(__scraper__.scheduleurl)
-       	__scraper__.schedules(schedulepage)
+        today = date.today()
+        for i in range (0, 7):
+            td = timedelta(days=i)
+            d1 = (today + td).timetuple()
+            Day = strftime("%A", d1)
+            Date = __scraper__.date_to_ordinal(d1.tm_mday)
+            usedate = __scraper__.convert_2_fssurldate(today + td)
+            Month = strftime("%B", d1)
+            self.add_nav_item([Day,' ',Date,' ',Month],
+                              'false',
+                              '0',
+                              True,
+                              usedate,
+                              '6')
+       	xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+    def list_daily_schedule(self, date):
+        day = datetime.datetime(*(time.strptime(date, "%Y-%m-%d"))[0:6])
+        today = str(day)
+        link = self.login(__scraper__.dailyscheduleurl %today)
+        __scraper__.get_schedule_item(link, today)
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
-        
-"""
-    def list_channel_schedules(self, url):
-       	schedulePage = (urllib2.urlopen(__scraper__.scheduleurl)).read()
-       	__scraper__.channel_schedule(schedulePage, url)
-        xbmcplugin.endOfDirectory(int(sys.argv[1]))
-"""

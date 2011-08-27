@@ -1,3 +1,7 @@
+[B]Version 1.2.0[/B]
+- added schedule scraping feature
+- known issue with certain channels not playing, e.g. VIP26
+
 [B]Version 1.1.0[/B]
 - added new channels
 
