@@ -1,3 +1,6 @@
+[B]1.4.1[/B]
+- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.2.6) i.e. "fixed: Originaltitle some time contains 'IMDb - ' string"
+
 [B]1.4.0[/B]
 - Fixed: All Critics score scraping (thanks freakshow33)
 
