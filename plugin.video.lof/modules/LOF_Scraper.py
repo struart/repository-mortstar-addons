@@ -7,6 +7,7 @@ import time
 
 import LOF_Navigator
 
+
 class LOF_Scraper:
 
     def __init__(self):
@@ -15,12 +16,13 @@ class LOF_Scraper:
         self.channelurl = ''.join([self.baseurl, 'watchlive/%s'])
         self.loginurl = ''.join([self.baseurl, 'amember/login.php'])
         self.memberurl = ''.join([self.baseurl, 'amember/member.php'])
-        self.scheduleurl = ''.join([self.baseurl, 'schedule.php'])
+        self.scheduleurl = ''.join([self.baseurl, 'schedule23456817.php'])
         self.swfurl = ' swfUrl=http://www.livesporton.net/player2.swf live=true'
         self.channelmenuurl = ''.join([self.baseurl, 'watchlive/'])
 
         # Regex Patterns
-        self.unapwd_regex = '<td width="85%">Welcome, (.+?)&nbsp;</td>'
+#        self.unapwd_regex = '<td width="85%">Welcome, (.+?)&nbsp;</td>'
+        self.unapwd_regex = '<p>Welcome, <strong>(.+?)\&nbsp;</strong></p>'
         self.sub_regex = '<a href="http://www.liveonlinefooty.com/watchlive/">(.+?)</a>'
         self.rtmp_regex = '\'streamer\',\'(.+?)\'\)'
         self.playpath_regex = '\'file\',\'(.+?)\'\)'
