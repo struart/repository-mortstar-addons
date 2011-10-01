@@ -36,9 +36,8 @@ class FSS_Scraper:
         self.multiday_event_regex = 'to'
         self.event_dst_regex = 'This event ignores DST'
         self.event_regex = '<form action="calendar.php\?do=manage&amp;e=(.+?)</form>'
-        self.eventcat_regex = '<td class="tcat">(.+?) -'
-        self.eventtitle_regex = '<td class="tcat".+? - (.+?)</td>'
-#        self.eventdate_regex = '</div>(.*?)<span class="time">| <br />'
+        self.eventcat_regex = '<td class="tcat">(.+?)[-|:]'
+        self.eventtitle_regex = '<td class="tcat">.+?[-|:](.+?)</td>'
         self.eventdate_regex = '<div class="smallfont">(.+?)<.+?</div>'
         self.eventtime_regex = '><span class="time">(.+?)</span> to <span class="time">(.+?)</span>'
 
@@ -79,23 +78,6 @@ class FSS_Scraper:
                           ' swfVfy=true live=true'])
         return rtmpurl
 
-    def schedules(self, schedulePage):
-        __navigator__ = FSS_Navigator.FSS_Navigator()
-        for each_event in self.schedule.finditer(schedulePage):
-            eventinfo, matchtitle = self.get_event_info(each_event.group(0))
-            slist = [each_event.group(0)]
-            isPlayable = 'false'
-            chanId = '0'
-            isFolder=True
-            playUrl = 'Whatever'
-            mode = '4'
-            __navigator__.add_nav_item(slist,
-                                       isPlayable,
-                                       chanId,
-                                       isFolder,
-                                       playUrl,
-                                       mode)
-
     def date_to_ordinal(self, date):
         if 10 <= date % 100 < 20:
             return str(date) + 'th'
@@ -129,20 +111,21 @@ class FSS_Scraper:
             cat = self.eventcat.search(each_event.group(1)).group(1)
             title = self.eventtitle.search(each_event.group(1)).group(1)
             title = self.stripchannel.sub('', title).strip()
-            date = self.eventdate.search(each_event.group(1))
-            dates = date.group(1).strip()
+#            date = self.eventdate.search(each_event.group(1))
+#            dates = date.group(1).strip()
             dst = self.event_dst.search(each_event.group(1))
             if dst == None:
                 isdst = True
             else:
                 isdst = False
-            if self.reoccuring_event.search(dates) != None:
-                dates = str_searchdate
-            if self.multiday_event.search(dates) != None:
-                datesplit = re.split(' to ', dates)
-                startdate = datesplit[0]
-            else:
-                startdate = str_searchdate
+#            if self.reoccuring_event.search(dates) != None:
+#                dates = str_searchdate
+#            if self.multiday_event.search(dates) != None:
+#                datesplit = re.split(' to ', dates)
+#                startdate = datesplit[0]
+#            else:
+#                startdate = str_searchdate
+            startdate=str_searchdate
             etime = self.eventtime.search(each_event.group(1))
             starthour = etime.group(1)
             event_start = ''.join([startdate, ' ', starthour])
@@ -164,7 +147,8 @@ class FSS_Scraper:
                                            chanId,
                                            isFolder,
                                            playUrl,
-                                           mode)
+                                           mode,
+                                           '')
 
     def convert_2_fssurldate(self, date):
         day = (date + timedelta(days=0)).timetuple()

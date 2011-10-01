@@ -29,7 +29,6 @@ class FSS_Navigator:
 
     def __init__(self):
         self.artwork   = os.path.join(fss_addon.getAddonInfo('path'),'image')
-        self.offline   = os.path.join(fss_addon.getAddonInfo('path'),'image\offline')
         self.username  = fss_addon.getSetting("username")
         self.password  = fss_addon.getSetting("password")
         self.passhash  = md5.new(self.password).hexdigest()
@@ -57,6 +56,23 @@ class FSS_Navigator:
                             'WBC Boxing', # Weird channel - not supported
                             'Fox Soccer Channel',
                             'Fox Soccer Plus']
+
+        self.imagename = ['SkySports1.png',
+                          'SkySports2.png',
+                          'SkySports3.png',
+                          'SkySports4.png',
+                          'SkySportsNews.png',
+                          'espnuk.png',
+                          'espnus.png',
+                          'espn2.png',
+                          'Setanta.png',
+                          'Setanta.png',
+                          'ESPNU.png',
+                          'SkyNewsHD.png',
+                          'WBC.png',
+                          'FSC.png',
+                          'FSP.png']
+                          
 
     def login(self, openurl):
         cj = cookielib.CookieJar()
@@ -88,6 +104,11 @@ class FSS_Navigator:
 	listfolder.setInfo('video', {'Title': 'Channels'})
 	xbmcplugin.addDirectoryItem(int(sys.argv[1]), u, listfolder, isFolder=1)
 
+	u=sys.argv[0]+"?url=TodaySchedule&mode=10"
+	listfolder = xbmcgui.ListItem('Today\'s Schedule')
+	listfolder.setInfo('video', {'Title': 'Today\'s Schedule'})
+	xbmcplugin.addDirectoryItem(int(sys.argv[1]), u, listfolder, isFolder=1)
+
 	u=sys.argv[0]+"?url=Schedule&mode=2"
 	listfolder = xbmcgui.ListItem('Schedule')
 	listfolder.setInfo('video', {'Title': 'Schedule'})
@@ -110,15 +131,16 @@ class FSS_Navigator:
                     isFolder=False
                     playUrl = urllib.quote_plus(__scraper__.channelurl %chanId)
                     mode = '5'
-                    self.add_nav_item(slist, isPlayable, chanId, isFolder, playUrl, mode)
+                    image = self.imagename[i-1]
+                    self.add_nav_item(slist, isPlayable, chanId, isFolder, playUrl, mode, image)
         xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
-    def add_nav_item(self, slist, isPlayable, chanId, isfolder, playUrl, mode):
+    def add_nav_item(self, slist, isPlayable, chanId, isfolder, playUrl, mode, image):
         label = ''.join(slist)
         listitem = xbmcgui.ListItem(label=label)
         listitem.setInfo('video' , {'title': label})
         listitem.setProperty('IsPlayable', isPlayable)
-#        listitem.setIconImage(os.path.join(self.artwork, 'ch%s.png' %chanId))
+        listitem.setIconImage(os.path.join(self.artwork, image))
         u=sys.argv[0]+"?url="+ playUrl + "&mode=%s" %mode + "&name="+urllib.quote_plus(label)
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=u, listitem=listitem, isFolder=isfolder)
 
@@ -142,9 +164,19 @@ class FSS_Navigator:
                               '0',
                               True,
                               usedate,
-                              '6')
+                              '6',
+                              '')
        	xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
+    def list_today_schedule(self):
+        aday = date.today()
+        bday = __scraper__.convert_2_fssurldate(aday)
+        cday = datetime.datetime(*(time.strptime(bday, "%Y-%m-%d"))[0:6])
+        today = str(cday)
+        link = self.login(__scraper__.dailyscheduleurl %today)
+        __scraper__.get_schedule_item(link, today)
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        
     def list_daily_schedule(self, date):
         day = datetime.datetime(*(time.strptime(date, "%Y-%m-%d"))[0:6])
         today = str(day)
