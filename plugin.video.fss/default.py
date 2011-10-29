@@ -25,7 +25,7 @@ import urllib
 import xbmcaddon
 from modules import FSS_Navigator
 
-fss_addon = xbmcaddon.Addon("plugin.video.fss");
+__settings__ = xbmcaddon.Addon("plugin.video.fss");
 __navigator__ = FSS_Navigator.FSS_Navigator()
 
 
@@ -66,15 +66,14 @@ if mode==None or url==None or len(url)<1:
 elif mode==1:
     __navigator__.list_channels()
 elif mode==2:
-    __navigator__.list_schedule()
+    __navigator__.list_daily_schedule('Today', '')
 elif mode==3:
-    fss_addon.openSettings(url=sys.argv[0])
+    __navigator__.list_schedule()
 elif mode==4:
-    __navigator__.list_channel_schedules(url)
+    __settings__.openSettings(url=sys.argv[0])
 elif mode==5:
     __navigator__.play_stream(url)
 elif mode==6:
-    __navigator__.list_daily_schedule(url)
-elif mode==10:
-    __navigator__.list_today_schedule()
+    __navigator__.list_daily_schedule('Someday', url)
+
 

@@ -8,7 +8,6 @@ import md5
 
 import time
 import datetime
-
 from time import strftime
 from time import strptime
 from datetime import timedelta
@@ -21,16 +20,18 @@ import xbmcaddon
 
 import FSS_Scraper
 
-fss_addon = xbmcaddon.Addon("plugin.video.fss");
-__scraper__ = FSS_Scraper.FSS_Scraper()
+__settings__ = xbmcaddon.Addon("plugin.video.fss");
+__handle__   = int(sys.argv[1])
+__artwork__  = os.path.join(__settings__.getAddonInfo('path'),'image')
+__language__ = __settings__.getLocalizedString
+__scraper__  = FSS_Scraper.FSS_Scraper()
 
 
 class FSS_Navigator:
 
     def __init__(self):
-        self.artwork   = os.path.join(fss_addon.getAddonInfo('path'),'image')
-        self.username  = fss_addon.getSetting("username")
-        self.password  = fss_addon.getSetting("password")
+        self.username  = __settings__.getSetting("username")
+        self.password  = __settings__.getSetting("password")
         self.passhash  = md5.new(self.password).hexdigest()
         self.loginData = urllib.urlencode(
             {'do' : 'login',
@@ -40,40 +41,25 @@ class FSS_Navigator:
              'vb_login_username' : self.username,
              'vb_login_password' : 0})
         
-        # Channel Name Array
-        self.channelname = ['Sky Sports 1',
-                            'Sky Sports 2',
-                            'Sky Sports 3',
-                            'Sky Sports 4',
-                            'Sky Sports News',
-                            'ESPN UK',
-                            'ESPN US',
-                            'ESPN 2',
-                            'Setanta Sports Canada',
-                            'Setanta Sports Australia',
-                            'ESPNU College Sports',
-                            'Sky News HD', # Channel is Silverlight - not supported
-                            'WBC Boxing', # Weird channel - not supported
-                            'Fox Soccer Channel',
-                            'Fox Soccer Plus']
+        # Channel Info Array
+        self.channelinfo = [('Sky Sports 1','SkySports1.png','vip1'),
+                            ('Sky Sports 2','SkySports2.png','vip2'),
+                            ('Sky Sports 3','SkySports3.png','vip3'),
+                            ('Sky Sports 4','SkySports4.png','vip4'),
+                            ('Sky Sports News','SkySportsNews.png','vip5'),
+                            ('ESPN UK','espnuk.png','vip6'),
+                            ('ESPN US','espnus.png','vip7'),
+                            ('ESPN 2','espn2.png','vip8'), # Uses alternative streaming mechanism - not supported
+                            ('Setanta Sports Canada','Setanta.png','vip9'),
+                            ('Setanta Sports Australia','Setanta.png','vip10'),
+                            ('ESPNU College Sports','espnu.png','vip11'),
+                            ('Sky News HD','SkyNewsHD.png','vip12'), # Channel is Silverlight - not supported
+                            ('WBC Boxing','WBC.png','vip13'), # Weird channel - not supported
+                            ('Fox Soccer Channel','FSC.png','vip14'),
+                            ('Fox Soccer Plus','FSP.png','vip15'),
+                            ('British Eurosport', 'BritishEurosport.png', 'vip16')]
 
-        self.imagename = ['SkySports1.png',
-                          'SkySports2.png',
-                          'SkySports3.png',
-                          'SkySports4.png',
-                          'SkySportsNews.png',
-                          'espnuk.png',
-                          'espnus.png',
-                          'espn2.png',
-                          'Setanta.png',
-                          'Setanta.png',
-                          'ESPNU.png',
-                          'SkyNewsHD.png',
-                          'WBC.png',
-                          'FSC.png',
-                          'FSP.png']
-                          
-
+    # Does the login and opens some link
     def login(self, openurl):
         cj = cookielib.CookieJar()
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
@@ -81,75 +67,70 @@ class FSS_Navigator:
         link = opener.open(openurl).read()
         return link
 
+    # Checks that username and password are correctly set
     def settings(self):
         if self.username != '' and self.password != '':
             link = self.login(__scraper__.memberurl)
             if (__scraper__.account_check(link) == False):
-                self.check_settings('-- Your username and/or password is incorrect. --')
+                self.check_settings(__language__(30031))
             else:
                 self.menu()
         else:
-            self.check_settings('-- Settings not defined or there is a problem.  Please check your settings. --')
+            self.check_settings(__language__(30032))
 
+    # Called when there is a failure to authenticate user
     def check_settings(self, error_string):
-	u=sys.argv[0]+"?url=Settings&mode=3"
+	u=''.join([sys.argv[0],"?url=Settings&mode=4"])
 	listfolder = xbmcgui.ListItem(error_string)
-	listfolder.setInfo('video', {'Title': 'Settings not defined or there is a problem.  Please check your settings.'})
-	xbmcplugin.addDirectoryItem(int(sys.argv[1]), u, listfolder, isFolder=1)
-        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+	listfolder.setInfo('video', {'Title': __language__(30032)})
+	xbmcplugin.addDirectoryItem(__handle__, u, listfolder, isFolder=1)
+        xbmcplugin.endOfDirectory(__handle__)
 
+    # Does the homepage listing
     def menu(self):
-	u=sys.argv[0]+"?url=Channels&mode=1"
-	listfolder = xbmcgui.ListItem('Channels')
-	listfolder.setInfo('video', {'Title': 'Channels'})
-	xbmcplugin.addDirectoryItem(int(sys.argv[1]), u, listfolder, isFolder=1)
+        menu_list = []
+        for menu_item in range(1,5):
+            u=''.join([sys.argv[0],"?url=",__language__(30010 + menu_item),"&mode=",str(menu_item)])
+            listfolder = xbmcgui.ListItem(__language__(30010 + menu_item))
+	    listfolder.setInfo('video', {'Title': __language__(30010 + menu_item)})
+	    menu_list.append((u,listfolder,True))
+	xbmcplugin.addDirectoryItems(__handle__, menu_list)
+        xbmcplugin.endOfDirectory(__handle__)
 
-	u=sys.argv[0]+"?url=TodaySchedule&mode=10"
-	listfolder = xbmcgui.ListItem('Today\'s Schedule')
-	listfolder.setInfo('video', {'Title': 'Today\'s Schedule'})
-	xbmcplugin.addDirectoryItem(int(sys.argv[1]), u, listfolder, isFolder=1)
-
-	u=sys.argv[0]+"?url=Schedule&mode=2"
-	listfolder = xbmcgui.ListItem('Schedule')
-	listfolder.setInfo('video', {'Title': 'Schedule'})
-	xbmcplugin.addDirectoryItem(int(sys.argv[1]), u, listfolder, isFolder=1)
-  
-	u=sys.argv[0]+"?url=Settings&mode=3"
-	listfolder = xbmcgui.ListItem('Settings')
-	listfolder.setInfo('video', {'Title': 'Settings'})
-	xbmcplugin.addDirectoryItem(int(sys.argv[1]), u, listfolder, isFolder=1)
-
-	xbmcplugin.endOfDirectory(int(sys.argv[1]))
-
+    # Lists all the 22/7 channels in the Channels page
     def list_channels(self):
-        for i in range (1,16):
+        for i in range (1,len(self.channelinfo) + 1):
             if i != 12:
                 if i != 13:
-                    slist = self.channelname[i-1]
-                    isPlayable = 'true'
-                    chanId = str(i)
-                    isFolder=False
-                    playUrl = urllib.quote_plus(__scraper__.channelurl %chanId)
-                    mode = '5'
-                    image = self.imagename[i-1]
-                    self.add_nav_item(slist, isPlayable, chanId, isFolder, playUrl, mode, image)
-        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+                    self.add_nav_item(self.channelinfo[i-1][0],
+                                      'true',
+                                      str(i),
+                                      False,
+                                      urllib.quote_plus(__scraper__.channelurl %i),
+                                      '5',
+                                      self.channelinfo[i-1][1])
+        xbmcplugin.endOfDirectory(__handle__)
 
+    # Adds navigation items
     def add_nav_item(self, slist, isPlayable, chanId, isfolder, playUrl, mode, image):
         label = ''.join(slist)
+        ic_th_image = os.path.join(__artwork__, image)
         listitem = xbmcgui.ListItem(label=label)
         listitem.setInfo('video' , {'title': label})
         listitem.setProperty('IsPlayable', isPlayable)
-        listitem.setIconImage(os.path.join(self.artwork, image))
-        u=sys.argv[0]+"?url="+ playUrl + "&mode=%s" %mode + "&name="+urllib.quote_plus(label)
-        xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=u, listitem=listitem, isFolder=isfolder)
+        listitem.setIconImage(ic_th_image)
+        listitem.setThumbnailImage(ic_th_image)
+        u=''.join([sys.argv[0],"?url=",playUrl,"&mode=%s" %mode,"&name=",urllib.quote_plus(label)])
+        xbmcplugin.addDirectoryItem(handle=__handle__, url=u, listitem=listitem, isFolder=isfolder)
 
+    # Gets the rtmp address from given url and plays stream
     def play_stream(self, url):
         link = self.login(url)
         rtmpUrl = __scraper__.build_rtmp_url(link, url)
         item = xbmcgui.ListItem(path=rtmpUrl)
-        return xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
+        return xbmcplugin.setResolvedUrl(__handle__, True, item)
 
+    # List next 7 days links in the Schedule menu
     def list_schedule(self):
         today = date.today()
         for i in range (0, 7):
@@ -166,20 +147,15 @@ class FSS_Navigator:
                               usedate,
                               '6',
                               '')
-       	xbmcplugin.endOfDirectory(int(sys.argv[1]))
+       	xbmcplugin.endOfDirectory(__handle__)
 
-    def list_today_schedule(self):
-        aday = date.today()
-        bday = __scraper__.convert_2_fssurldate(aday)
-        cday = datetime.datetime(*(time.strptime(bday, "%Y-%m-%d"))[0:6])
-        today = str(cday)
-        link = self.login(__scraper__.dailyscheduleurl %today)
-        __scraper__.get_schedule_item(link, today)
-        xbmcplugin.endOfDirectory(int(sys.argv[1]))
-        
-    def list_daily_schedule(self, date):
-        day = datetime.datetime(*(time.strptime(date, "%Y-%m-%d"))[0:6])
+    # Lists day's schedule for a given date
+    def list_daily_schedule(self, period, g_date):
+        if period == 'Today':
+            aday = date.today()
+            g_date = __scraper__.convert_2_fssurldate(aday)
+        day = datetime.datetime(*(time.strptime(g_date, "%Y-%m-%d"))[0:6])
         today = str(day)
         link = self.login(__scraper__.dailyscheduleurl %today)
         __scraper__.get_schedule_item(link, today)
-        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        xbmcplugin.endOfDirectory(__handle__)

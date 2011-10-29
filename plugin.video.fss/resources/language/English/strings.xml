@@ -1,4 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <strings>
     <string id="30000">FlashSportStreams Username</string>
     <string id="30001">FlashSportStreams Password</string>
+    <!-- Menu Item Strings -->
+    <string id="30011">Channels</string>
+    <string id="30012">Today's Schedule</string>
+    <string id="30013">Next 7 Days Schedule</string>
+    <string id="30014">Settings</string>
+    <!-- Error Strings -->
+    <string id="30031">-- Your username and/or password is incorrect. --</string>
+    <string id="30032">-- Settings not defined or there is a problem.  Please check your settings. --</string>
 </strings>
