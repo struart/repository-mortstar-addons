@@ -1,3 +1,6 @@
+[B]Version 2.0.0[/B]
+- massive code change due to site redesign
+
 [B]Version 1.7.5[/B]
 - fixed the schedule as it's fucking stupidly called schedule23456817.php
 - fixed authentication due to the invite system being added

@@ -23,52 +23,55 @@ import sys
 
 import urllib
 import xbmcaddon
-from modules import LOF_Navigator
 
-lof_addon = xbmcaddon.Addon("plugin.video.lof");
-__navigator__ = LOF_Navigator.LOF_Navigator()
+from modules import LOFCore
+
+__settings__ = xbmcaddon.Addon("plugin.video.lof");
+__nav__      = LOFCore.LOFNavigator()
 
 def get_params():
-    param=[]
-    paramstring=sys.argv[2]
+    param = []
+    paramstring = sys.argv[2]
     if len(paramstring)>=2:
-        params=sys.argv[2]
-        cleanedparams=params.replace('?','')
-        if (params[len(params)-1]=='/'):
-            params=params[0:len(params)-2]
-        pairsofparams=cleanedparams.split('&')
+        params = sys.argv[2]
+        cleanedparams = params.replace('?','')
+        if (params[len(params)-1] == '/'):
+            params = params[0:len(params)-2]
+        pairsofparams = cleanedparams.split('&')
         param={}
         for i in range(len(pairsofparams)):
-            splitparams={}
-            splitparams=pairsofparams[i].split('=')
-            if (len(splitparams))==2:
-                param[splitparams[0]]=splitparams[1]
+            splitparams = {}
+            splitparams = pairsofparams[i].split('=')
+            if (len(splitparams)) == 2:
+                param[splitparams[0]] = splitparams[1]
     return param
 
-#main program
+params = get_params()
 
-params=get_params()
-url=None
-mode=None
+url = None
+mode = None
 try:
-    url=urllib.unquote_plus(params["url"])
-    title=urllib.unquote_plus(params["title"])
+    url = urllib.unquote_plus(params["url"])
+    title = urllib.unquote_plus(params["title"])
 except:
     pass
 try:
-    mode=int(params["mode"])
+    mode = int(params["mode"])
 except:
     pass
 
-if mode==None or url==None or len(url)<1:
-    __navigator__.settings()
-elif mode==1:
-    __navigator__.list_channels()
-elif mode==2:
-    __navigator__.list_schedule()
-elif mode==3:
-    lof_addon.openSettings(url=sys.argv[0])
-elif mode==4:
-    __navigator__.list_channel_schedules(url)
-elif mode==5:
-    __navigator__.play_stream(url)
+if mode == None or url==None or len(url)<1:
+    print "Mode None - MainMenu"
+    __nav__.MainMenu()
+elif mode == 1:
+    print "Mode 1 - ListChannels"
+    __nav__.ListChannels()
+elif mode == 2:
+    print "Mode 2 - ListSchedule"
+    __nav__.ListSchedule()
+elif mode == 5:
+    print "Mode 5 - PlayStream"
+    __nav__.PlayStream(url)
+elif mode == 6:
+    print "Mode 6 - ListChannelSchedule"
+    __nav__.ListChannelSchedule(url)
