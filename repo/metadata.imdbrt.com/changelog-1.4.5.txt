@@ -1,3 +1,6 @@
+[B]1.4.5[/B]
+- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.3.2) i.e. "added: option to scrape trailer links directly from YouTube, credits to ZackDepp"
+
 [B]1.4.1[/B]
 - Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.2.6) i.e. "fixed: Originaltitle some time contains 'IMDb - ' string"
 
