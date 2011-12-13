@@ -70,7 +70,7 @@ class FSS_Scraper:
             event_info = each_event.group(1)
             cat, title, starthour = self.get_event_info(event_info)
             for every_channel in self.channel.finditer(each_event.group(0)):
-                __navigator__.add_nav_item([cat, ' | ', title, ' | ', starthour],
+                __navigator__.add_nav_item([cat, ' | ', title, ' | ', starthour, ' | VIP', every_channel.group(1)],
                                            'true',
                                            every_channel.group(1),
                                            False,

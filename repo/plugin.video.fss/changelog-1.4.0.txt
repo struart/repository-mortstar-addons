@@ -1,3 +1,7 @@
+[B]Version 1.4.0[/B]
+- added a bunch of new channels
+- added channel number in schedule
+
 [B]Version 1.3.1[/B]
 - fixed changes to Sky Sports channels rtmp address parsing
 
