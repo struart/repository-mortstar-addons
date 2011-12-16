@@ -5,31 +5,51 @@ class Schedule:
     def __init__(self):
         self.scheduleList = []
         self.chanList  = [] # Channel Name & Channel URL
-        self.match = re.compile('<h3>(.+?)</h3>')
+        self.match = re.compile('<span.+?>(.+?) - (.+?)</span>(.+?)<span.+?>(.+?)</span>')
+        self.channel = re.compile('<a onClick=\"parent.callMe\(\'http://www.liveonlinefooty.com/watchlive/(.+?)\'\);\" href=\"#\">(.+?)</a>')
         self.matchInfo = re.compile('<span.+?>(.+?) - (.+?)</span>(.+?)<span.+?>(.+?)</span>')
+        self.previousPage = re.compile('<h3><a href=\"/(.+?)\">(.+?)</a> \| (.+?)</h3>')
+        self.nextPage = re.compile('<h3>(.+?) \| <a href=\"/(.+?)\">(.+?)</a></h3>')
         self.__date__ = LOFDate()
 
     def ListSchedule(self, schedulePage):
         print "ListSchedule"
         self.ParseAndAppendSchedule(schedulePage)
+        self.MoreScheduleListings(schedulePage)
         return self.scheduleList
 
     def ParseAndAppendSchedule(self, schedulePage):
         print "ParseAndAppendSchedule"
         for eachMatch in self.match.finditer(schedulePage):
-            match = self.matchInfo.search(eachMatch.group(1))
-            matchTime  = self.__date__.FixDate(match.group(1), match.group(2))
-            matchTitleAndComp = match.group(3).strip(' - ')
+            matchTime = self.__date__.FixDate(eachMatch.group(1), eachMatch.group(2))
+            matchTitleAndComp = re.sub('<[^<]+?>', '', eachMatch.group(3)).strip(' - ')
             matchTitleAndComp = re.split(' - ', matchTitleAndComp)
             matchTitle = matchTitleAndComp[0]
-            matchComp = matchTitleAndComp[1]
-            for eachChannel in re.finditer('Channel (.+?)', match.group(4)):
-                chanURL = ''.join(['channel', eachChannel.group(1), '.php'])
-                chanName = eachChannel.group(0)
+            if len(matchTitleAndComp) > 1:
+                matchComp = matchTitleAndComp[1]
+            else:
+                matchComp = ''
+            # Add list of channels event is being broadcast on
+            for eachChannel in self.channel.finditer(eachMatch.group(0)):
+                chanURL = eachChannel.group(1)
+                chanName = eachChannel.group(2)
                 self.chanList.append((chanURL, chanName))
             self.scheduleList.append((matchTime, matchTitle, matchComp, self.chanList))
             self.chanList = []
 
+    def MoreScheduleListings(self, schedulePage):
+        print "MoreScheduleListings"
+        if self.previousPage.search(schedulePage) == None:
+            prevPage = False
+        else:
+            self.chanList.append((self.previousPage.search(schedulePage).group(1), ''))
+            self.scheduleList.insert(0,(True, 'Previous Page', '', self.chanList))
+        if self.nextPage.search(schedulePage) == None:
+            nxtPage = False
+        else:
+            self.chanList.append((self.nextPage.search(schedulePage).group(2), ''))
+            self.scheduleList.append((True, 'Next Page', '', self.chanList))
+    
     def ListChannelSchedule(self):
         print "ListChannelSchedule"
         pass
@@ -43,7 +63,6 @@ class LOFDate:
         print "FixDate"
         dateStr = ''.join([mHour, ' ', self.DateFromOrdinal(mDate)])
         ttDay = time.strptime(dateStr, "%H:%M %a %d %b")
-        currTime = time.localtime()
         ttDay = self.DateAddYear(ttDay, dateStr)
         # Make the event a timeStamp
         eventTimeStamp = time.mktime(ttDay)
@@ -79,6 +98,9 @@ class LOFDate:
             ttDay = time.strptime(''.join([dateStr, ' ', str(currTime.tm_year)]), "%H:%M %a %d %b %Y")
         else:
             # If event month is January (and currTime is December) set year as next year
-            if ttDay.tm_mon == 1:
-                    ttDay = time.strptime(''.join([dateStr, ' ', str(currTime.tm_year + 1)]), "%H:%M %a %d %b %Y")
+            if ttDay.tm_mon == 1 and currTime.tm_mon == 12:
+                ttDay = time.strptime(''.join([dateStr, ' ', str(currTime.tm_year + 1)]), "%H:%M %a %d %b %Y")
+            # If event month is December and currTime is December set year as this year
+            else:
+                ttDay = time.strptime(''.join([dateStr, ' ', str(currTime.tm_year)]), "%H:%M %a %d %b %Y")
         return ttDay

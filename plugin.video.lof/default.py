@@ -68,7 +68,7 @@ elif mode == 1:
     __nav__.ListChannels()
 elif mode == 2:
     print "Mode 2 - ListSchedule"
-    __nav__.ListSchedule()
+    __nav__.ListSchedule(url)
 elif mode == 5:
     print "Mode 5 - PlayStream"
     __nav__.PlayStream(url)

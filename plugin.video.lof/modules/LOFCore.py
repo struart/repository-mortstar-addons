@@ -24,7 +24,7 @@ __sched__    = Schedule()
 
 BASE_URL = 'http://www.liveonlinefooty.com/'
 LOGIN_URL = ''.join([BASE_URL, 'amember/member.php'])
-SCHED_URL = ''.join([BASE_URL, 'today.php'])
+SCHED_URL = ''.join([BASE_URL, 'liveschedule.php'])
 WATCH_URL = ''.join([BASE_URL, 'watchlive/'])
 
 class LOFNavigator:
@@ -70,9 +70,12 @@ class LOFNavigator:
             self.MainMenu()
         xbmcplugin.endOfDirectory(__handle__)
         
-    def ListSchedule(self):
+    def ListSchedule(self, url):
         print "NavigatorListSchedule"
-        schedulePage = self.__conn__.QueryLOF(SCHED_URL, "ListSchedule")
+        if url == 'Schedule':
+            schedulePage = self.__conn__.QueryLOF(SCHED_URL, "ListSchedule")
+        else:
+            schedulePage = self.__conn__.QueryLOF(''.join([BASE_URL, url]), "ListSchedule")
         if schedulePage != False:
             scheduleList = __sched__.ListSchedule(schedulePage)
             for event in range(len(scheduleList)):
@@ -83,11 +86,18 @@ class LOFNavigator:
                     self.isPlayable = 'false'
                     self.isFolder = False
                 elif len(scheduleList[event][3]) == 1:
-                    self.label = ''.join([scheduleList[event][0], ' | ', scheduleList[event][1]])
-                    self.playUrl = ''.join([WATCH_URL, scheduleList[event][3][0][0]])
-                    self.mode = '5'
-                    self.isPlayable = 'true'
-                    self.isFolder = False
+                    if scheduleList[event][0] == True:
+                        self.label = scheduleList[event][1]
+                        self.playUrl = urllib.quote_plus(scheduleList[event][3][0][0])
+                        self.mode = '2'
+                        self.isPlayable = 'false'
+                        self.isFolder = True
+                    else:
+                        self.label = ''.join([scheduleList[event][0], ' | ', scheduleList[event][1]])
+                        self.playUrl = ''.join([WATCH_URL, scheduleList[event][3][0][0]])
+                        self.mode = '5'
+                        self.isPlayable = 'true'
+                        self.isFolder = False
                 else:
                     self.label = ''.join([scheduleList[event][0], ' | ', scheduleList[event][1]])
                     tempEventList = []
