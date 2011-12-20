@@ -4,7 +4,6 @@ import sys
 import urllib
 import urllib2
 from urllib2 import URLError
-import cookielib
 
 import re
 
@@ -32,6 +31,7 @@ class LOFNavigator:
     def __init__(self):
         self.__conn__ = LOFConnect()
         # ListContainer
+        self.addDirAction = ''
         self.label = ''
         self.playUrl = ''
         self.mode = ''
@@ -55,19 +55,24 @@ class LOFNavigator:
 
     def ListChannels(self):
         print "NavigatorListChannels"
-        channelPage = self.__conn__.QueryLOF(WATCH_URL, "ListChannels")
-        if channelPage != False:
-            channelList = __chan__.ListChannels(channelPage)
-            for channel in channelList:
-                self.label = channel[1]
-                self.playUrl = ''.join([WATCH_URL, channel[0]])
-                self.mode = '5'
-                self.isPlayable = 'true'
-                self.isFolder = False
-                self.AddDir()
-        else:
-            print "Channel listing not returned"
-            self.MainMenu()
+        channelPage = ''
+        channelList = __chan__.ListChannels(channelPage)
+        for channel in channelList:
+            self.label = channel[1]
+            self.playUrl = ''.join([WATCH_URL, channel[0]])
+            self.addDirAction = 'ListChannels'
+            self.AddDir()
+##        channelPage = self.__conn__.QueryLOF(WATCH_URL, "ListChannels")
+##        if channelPage != False:
+##            channelList = __chan__.ListChannels(channelPage)
+##            for channel in channelList:
+##                self.label = channel[1]
+##                self.playUrl = ''.join([WATCH_URL, channel[0]])
+##                self.addDirAction = 'ListChannels'
+##                self.AddDir()
+##        else:
+##            print "Channel listing not returned"
+##            self.MainMenu()
         xbmcplugin.endOfDirectory(__handle__)
         
     def ListSchedule(self, url):
@@ -77,37 +82,34 @@ class LOFNavigator:
         else:
             schedulePage = self.__conn__.QueryLOF(''.join([BASE_URL, url]), "ListSchedule")
         if schedulePage != False:
-            scheduleList = __sched__.ListSchedule(schedulePage)
-            for event in range(len(scheduleList)):
-                if len(scheduleList[event][3]) == 0:
-                    self.label = ''.join([scheduleList[event][0], ' | ', scheduleList[event][1], ' | Coming Soon'])
-                    self.playUrl = ''
-                    self.mode = ''
-                    self.isPlayable = 'false'
-                    self.isFolder = False
-                elif len(scheduleList[event][3]) == 1:
-                    if scheduleList[event][0] == True:
-                        self.label = scheduleList[event][1]
-                        self.playUrl = urllib.quote_plus(scheduleList[event][3][0][0])
-                        self.mode = '2'
-                        self.isPlayable = 'false'
-                        self.isFolder = True
+            # SL = scheduleList
+            __SL__ = __sched__.ListSchedule(schedulePage)
+            for event in range(len(__SL__)):
+                # Event has no channels listed in schedule
+                if len(__SL__[event][3]) == 0:
+                    self.label = ''.join([__SL__[event][0], ' | ', __SL__[event][1], ' | Coming Soon'])
+                    self.addDirAction = 'EventNoChannels'
+                # Event has a single channel item listed
+                elif len(__SL__[event][3]) == 1:
+                    # Channel item is next or previous schedule page url
+                    if __SL__[event][0] == True:
+                        self.label = __SL__[event][1]
+                        self.playUrl = urllib.quote_plus(__SL__[event][3][0][0])
+                        self.addDirAction = 'AnotherSchedulePage'
+                    # Event has a single channel url
                     else:
-                        self.label = ''.join([scheduleList[event][0], ' | ', scheduleList[event][1]])
-                        self.playUrl = ''.join([WATCH_URL, scheduleList[event][3][0][0]])
-                        self.mode = '5'
-                        self.isPlayable = 'true'
-                        self.isFolder = False
+                        self.label = ''.join([__SL__[event][0], ' | ', __SL__[event][1]])
+                        self.playUrl = ''.join([WATCH_URL, __SL__[event][3][0][0]])
+                        self.addDirAction = 'EventItem'
+                # Event has multiple channel listings
                 else:
-                    self.label = ''.join([scheduleList[event][0], ' | ', scheduleList[event][1]])
                     tempEventList = []
-                    for channel in range(len(scheduleList[event][3])):
-                        tempEventList.append(''.join([WATCH_URL, scheduleList[event][3][channel][0], ',', scheduleList[event][3][channel][1], '#']))
+                    for channel in range(len(__SL__[event][3])):
+                        tempEventList.append(''.join([WATCH_URL, __SL__[event][3][channel][0], ',', __SL__[event][3][channel][1], '#']))
+                    self.label = ''.join([__SL__[event][0], ' | ', __SL__[event][1]])
                     strEventList = ''.join(tempEventList)
                     self.playUrl = strEventList
-                    self.mode = '6'
-                    self.isPlayable = 'false'
-                    self.isFolder = True
+                    self.addDirAction = 'MultipleChannels'
                 self.AddDir()
         else:
             print "Schedule not returned"
@@ -120,9 +122,7 @@ class LOFNavigator:
         for eachChan in chanReg.finditer(channelList):
             self.label = str.capitalize(eachChan.group(2))
             self.playUrl = eachChan.group(1)
-            self.mode = '5'
-            self.isPlayable = 'true'
-            self.isFolder = False
+            self.addDirAction = 'ListChannelSchedule'
             self.AddDir()
         xbmcplugin.endOfDirectory(__handle__)
         
@@ -144,13 +144,38 @@ class LOFNavigator:
             print rtmpUrl
 	    item = xbmcgui.ListItem(path=rtmpUrl)
             return xbmcplugin.setResolvedUrl(__handle__, True, item)
-            xbmc.Player( xbmc.PLAYER_CORE_DVDPLAYER ).play(rtmpUrl, item )
         else:
             print "Couldn't open playback stream"
             self.MainMenu()
         
     def AddDir(self):
         print "AddDir"
+        if self.addDirAction == 'ListChannels':
+            self.mode = '5'
+            self.isPlayable = 'true'
+            self.isFolder = False
+        elif self.addDirAction == 'EventNoChannels':
+            self.playUrl = ''
+            self.mode = ''
+            self.isPlayable = 'false'
+            self.isFolder = False
+        elif self.addDirAction == 'AnotherSchedulePage':
+            self.mode = '2'
+            self.isPlayable = 'false'
+            self.isFolder = True
+        elif self.addDirAction == 'EventItem':
+            self.mode = '5'
+            self.isPlayable = 'true'
+            self.isFolder = False
+        elif self.addDirAction == 'MultipleChannels':
+            self.mode = '6'
+            self.isPlayable = 'false'
+            self.isFolder = True
+        elif self.addDirAction == 'ListChannelSchedule':
+            self.mode = '5'
+            self.isPlayable = 'true'
+            self.isFolder = False
+            
         ic_th_image = os.path.join(__artwork__, 'chan_icon.png')
         liz = xbmcgui.ListItem(label = self.label)
         liz.setInfo('video' , {'title': self.label})
@@ -174,6 +199,7 @@ class LOFConnect:
         # Login and View Page
         try:
             response = opener.open(openurl, self.loginData).read()
+            opener.close()
         except URLError, e:
             if hasattr(e, 'reason'):
                 print 'Failed to login: ' + str(e.reason)

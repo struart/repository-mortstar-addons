@@ -1,3 +1,6 @@
+[B]Version 2.0.2[/B]
+- made channel list fixed, without querying website, as how the list is done keeps changing
+
 [B]Version 2.0.1[/B]
 - hopefully fixed schedule for people's delight
 

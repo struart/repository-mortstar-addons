@@ -18,6 +18,8 @@ class Channels:
     def ParseAndAppendChannels(self, channelPage):
         print "ParseAndAppendChannels"
         self.channelList = []
-        channelEntryRegex = '<a id.+?href=\"(.+?)\" class=\"channel\".+?>(.+?)</a>'
-        for eachChannel in re.finditer(channelEntryRegex, channelPage, re.M|re.DOTALL):
-            self.channelList.append((eachChannel.group(1), eachChannel.group(2)))
+        for i in range(1,13):
+            self.channelList.append((''.join(['channel', str(i), '.php']), ''.join(['Channel ', str(i)])))
+##        channelEntryRegex = 'a href=\"(.+?).php\" class=.+?>(.+?)</a>'
+##        for eachChannel in re.finditer(channelEntryRegex, channelPage, re.M|re.DOTALL):
+##            self.channelList.append((''.join([eachChannel.group(1), '.php']), eachChannel.group(2)))
