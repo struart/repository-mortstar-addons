@@ -40,18 +40,18 @@ class LOFNavigator:
     
     def MainMenu(self):
         print "MainMenu"
-	u=sys.argv[0]+"?url=Channels&mode=1"
-	listfolder = xbmcgui.ListItem('Channels')
-	listfolder.setInfo('video', {'Title': 'Channels'})
-	xbmcplugin.addDirectoryItem(__handle__, u, listfolder, isFolder=1)
+        u=sys.argv[0]+"?url=Channels&mode=1"
+        listfolder = xbmcgui.ListItem('Channels')
+        listfolder.setInfo('video', {'Title': 'Channels'})
+        xbmcplugin.addDirectoryItem(__handle__, u, listfolder, isFolder=1)
 
-	u=sys.argv[0]+"?url=Schedule&mode=2"
-	listfolder = xbmcgui.ListItem('Schedule')
-	listfolder.setInfo('video', {'Title': 'Schedule'})
-	listfolder.setIconImage(os.path.join(__artwork__, 'calendar.png'))
-	xbmcplugin.addDirectoryItem(__handle__, u, listfolder, isFolder=1)
-  
-	xbmcplugin.endOfDirectory(__handle__)
+        u=sys.argv[0]+"?url=Schedule&mode=2"
+        listfolder = xbmcgui.ListItem('Schedule')
+        listfolder.setInfo('video', {'Title': 'Schedule'})
+        listfolder.setIconImage(os.path.join(__artwork__, 'calendar.png'))
+        xbmcplugin.addDirectoryItem(__handle__, u, listfolder, isFolder=1)
+
+        xbmcplugin.endOfDirectory(__handle__)
 
     def ListChannels(self):
         print "NavigatorListChannels"
@@ -87,22 +87,26 @@ class LOFNavigator:
             for event in range(len(__SL__)):
                 # Event has no channels listed in schedule
                 if len(__SL__[event][3]) == 0:
+                    print 'EventNoChannels'
                     self.label = ''.join([__SL__[event][0], ' | ', __SL__[event][1], ' | Coming Soon'])
                     self.addDirAction = 'EventNoChannels'
                 # Event has a single channel item listed
                 elif len(__SL__[event][3]) == 1:
                     # Channel item is next or previous schedule page url
                     if __SL__[event][0] == True:
+                        print 'AnotherSchedulePage'
                         self.label = __SL__[event][1]
                         self.playUrl = urllib.quote_plus(__SL__[event][3][0][0])
                         self.addDirAction = 'AnotherSchedulePage'
                     # Event has a single channel url
                     else:
+                        print 'SingleChannelItem'
                         self.label = ''.join([__SL__[event][0], ' | ', __SL__[event][1]])
                         self.playUrl = ''.join([WATCH_URL, __SL__[event][3][0][0]])
                         self.addDirAction = 'EventItem'
                 # Event has multiple channel listings
                 else:
+                    print 'MultipleChannels'
                     tempEventList = []
                     for channel in range(len(__SL__[event][3])):
                         tempEventList.append(''.join([WATCH_URL, __SL__[event][3][channel][0], ',', __SL__[event][3][channel][1], '#']))
@@ -110,6 +114,7 @@ class LOFNavigator:
                     strEventList = ''.join(tempEventList)
                     self.playUrl = strEventList
                     self.addDirAction = 'MultipleChannels'
+                    print self.playUrl
                 self.AddDir()
         else:
             print "Schedule not returned"

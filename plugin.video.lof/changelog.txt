@@ -1,3 +1,6 @@
+[B]Version 2.0.3[/B]
+- fixed schedule parsing where it strips HTML tags from channel name, that was preventing schedule item from being displayed
+
 [B]Version 2.0.2[/B]
 - made channel list fixed, without querying website, as how the list is done keeps changing
 

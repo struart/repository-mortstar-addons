@@ -32,7 +32,7 @@ class Schedule:
             # Add list of channels event is being broadcast on
             for eachChannel in self.channel.finditer(eachMatch.group(0)):
                 chanURL = eachChannel.group(1)
-                chanName = eachChannel.group(2)
+                chanName = re.sub(r'<[^>]*?>', '', eachChannel.group(2))
                 self.chanList.append((chanURL, chanName))
             self.scheduleList.append((matchTime, matchTitle, matchComp, self.chanList))
             self.chanList = []
