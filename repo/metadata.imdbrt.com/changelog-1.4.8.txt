@@ -1,3 +1,6 @@
+[B]1.4.8[/B]
+- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.3.4) i.e. "fixed: factored out genres to common"
+
 [B]1.4.7[/B]
 - Fixed: Matched Team XBMC's IMDb changes to scrape counrty and genre + bumped common imdb for director and writer
 
