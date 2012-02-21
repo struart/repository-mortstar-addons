@@ -1,3 +1,6 @@
+[B]1.5.2[/B]
+- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.3.5) i.e. "added: prioritize 'imdb display title' when scraping AKA titles"
+
 [B]1.5.1[/B]
 - Added: Movie set from TheMovieDB
 - Added: Optional prefix for certification, required for display of certificate logos in some skins
