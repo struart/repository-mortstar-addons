@@ -19,7 +19,7 @@ class FSS_Scraper:
         self.baseurl = 'http://www.flashsportstreams.tv/'
         self.loginurl = ''.join([self.baseurl, 'forum/login.php?do=login'])
         self.memberurl = ''.join([self.baseurl, 'forum/view.php?pg=home&styleid=1'])
-        self.channelurl = ''.join([self.baseurl, 'forum/view.php?pg=vip%s'])
+        self.channelurl = ''.join([self.baseurl, 'forum/view.php?pg=vip%sxbmc'])
         self.scheduleurl = ''.join([self.baseurl, 'forum/calendar.php'])
         self.dailyscheduleurl = ''.join([self.baseurl, 'forum/calendar.php?do=getinfo&day=%s&c=1'])
         # Regex Statements

@@ -54,8 +54,8 @@ class FSS_Navigator:
                             ('Setanta Sports Canada','Setanta.png','vip10', True),
                             ('Setanta Sports Australia','Setanta.png','vip11', True),
                             ('Setanta Sports China','Setanta.png','vip12', True),
-                            ('Setanta Sports India','Setanta.png','vip13', True),
-                            ('WBC Boxing','WBC.png','vip14', False), # Weird channel - not supported
+                            ('Setanta Sports Ireland','Setanta.png','vip13', True),
+                            ('Sky Sports F1','SkySportsF1.png','vip14', True),
                             ('Fox Soccer Channel','FSC.png','vip15', True),
                             ('Fox Soccer Plus','FSP.png','vip16', True),
                             ('British Eurosport', 'BritishEurosport.png', 'vip17', True),
@@ -70,6 +70,81 @@ class FSS_Navigator:
                             ('Sky Arts', 'SKYARTS.png', 'vip26', True),
                             ('Sky Movies 1', 'SKYMOVIES.png', 'vip27', True),
                             ('Sky Movies 2', 'SKYMOVIES.png', 'vip28', True)]
+
+        # VIP Channel Info Array
+        self.vipchannelinfo = [('VIP 29', 'none.png', 'vip29', True),
+                               ('VIP 30', 'none.png', 'vip30', True),
+					 ('VIP 31', 'none.png', 'vip31', True),
+                               ('VIP 32', 'none.png', 'vip32', True),
+                               ('VIP 33', 'none.png', 'vip33', True),
+                               ('VIP 34', 'none.png', 'vip34', True),
+                               ('VIP 35', 'none.png', 'vip35', True),
+                               ('VIP 36', 'none.png', 'vip36', True),
+                               ('VIP 37', 'none.png', 'vip37', True),
+                               ('VIP 38', 'none.png', 'vip38', True),
+                               ('VIP 39', 'none.png', 'vip39', True),
+                               ('VIP 40', 'none.png', 'vip40', True),
+					 ('VIP 41', 'none.png', 'vip41', True),
+                               ('VIP 42', 'none.png', 'vip42', True),
+                               ('VIP 43', 'none.png', 'vip43', True),
+                               ('VIP 44', 'none.png', 'vip44', True),
+                               ('VIP 45', 'none.png', 'vip45', True),
+                               ('VIP 46', 'none.png', 'vip46', True),
+                               ('VIP 47', 'none.png', 'vip47', True),
+                               ('VIP 48', 'none.png', 'vip48', True),
+                               ('VIP 49', 'none.png', 'vip49', True),
+                               ('VIP 50', 'none.png', 'vip50', True),
+					 ('VIP 51', 'none.png', 'vip51', True),
+                               ('VIP 52', 'none.png', 'vip52', True),
+                               ('VIP 53', 'none.png', 'vip53', True),
+                               ('VIP 54', 'none.png', 'vip54', True),
+                               ('VIP 55', 'none.png', 'vip55', True),
+                               ('VIP 56', 'none.png', 'vip56', True),
+                               ('VIP 57', 'none.png', 'vip57', True),
+                               ('VIP 58', 'none.png', 'vip58', True),
+                               ('VIP 59', 'none.png', 'vip59', True),
+                               ('VIP 60', 'none.png', 'vip60', True),
+                               ('VIP 61', 'none.png', 'vip61', True),
+                               ('VIP 62', 'none.png', 'vip62', True),
+                               ('VIP 63', 'none.png', 'vip63', True),
+                               ('VIP 64', 'none.png', 'vip64', True),
+                               ('VIP 65', 'none.png', 'vip65', True),
+                               ('VIP 66', 'none.png', 'vip66', True),
+                               ('VIP 67', 'none.png', 'vip67', True),
+                               ('VIP 68', 'none.png', 'vip68', True),
+                               ('VIP 69', 'none.png', 'vip69', True),
+                               ('VIP 70', 'none.png', 'vip70', True),
+                               ('VIP 71', 'none.png', 'vip71', True),
+                               ('VIP 72', 'none.png', 'vip72', True),
+                               ('VIP 73', 'none.png', 'vip73', True),
+                               ('VIP 74', 'none.png', 'vip74', True),
+                               ('VIP 75', 'none.png', 'vip75', True),
+                               ('VIP 76', 'none.png', 'vip76', True),
+                               ('VIP 77', 'none.png', 'vip77', True),
+                               ('VIP 78', 'none.png', 'vip78', True),
+                               ('VIP 79', 'none.png', 'vip79', True),
+                               ('VIP 80', 'none.png', 'vip80', True),
+                               ('VIP 81', 'none.png', 'vip81', True),
+                               ('VIP 82', 'none.png', 'vip82', True),
+                               ('VIP 83', 'none.png', 'vip83', True),
+                               ('VIP 84', 'none.png', 'vip84', True),
+                               ('VIP 85', 'none.png', 'vip85', True),
+                               ('VIP 86', 'none.png', 'vip86', True),
+                               ('VIP 87', 'none.png', 'vip87', True),
+                               ('VIP 88', 'none.png', 'vip88', True),
+                               ('VIP 89', 'none.png', 'vip89', True),
+                               ('VIP 90', 'none.png', 'vip90', True),
+                               ('VIP 91', 'none.png', 'vip91', True),
+                               ('VIP 92', 'none.png', 'vip92', True),
+                               ('VIP 93', 'none.png', 'vip93', True),
+                               ('VIP 94', 'none.png', 'vip94', True),
+                               ('VIP 95', 'none.png', 'vip95', True),
+                               ('VIP 96', 'none.png', 'vip96', True),
+                               ('VIP 97', 'none.png', 'vip97', True),
+                               ('VIP 98', 'none.png', 'vip98', True),
+                               ('VIP 99', 'none.png', 'vip99', True),
+                               ('VIP 100', 'none.png', 'vip100', True)]
+
 
     # Does the login and opens some link
     def login(self, openurl):
@@ -101,7 +176,7 @@ class FSS_Navigator:
     # Does the homepage listing
     def menu(self):
         menu_list = []
-        for menu_item in range(1,5):
+        for menu_item in range(1,6):
             u=''.join([sys.argv[0],"?url=",__language__(30010 + menu_item),"&mode=",str(menu_item)])
             listfolder = xbmcgui.ListItem(__language__(30010 + menu_item))
 	    listfolder.setInfo('video', {'Title': __language__(30010 + menu_item)})
@@ -118,8 +193,21 @@ class FSS_Navigator:
                                   str(i),
                                   False,
                                   urllib.quote_plus(__scraper__.channelurl %i),
-                                  '5',
+                                  '6',
                                   self.channelinfo[i-1][1])
+        xbmcplugin.endOfDirectory(__handle__)
+
+    # Lists all the VIP channels in the VIP Channels page
+    def list_vipchannels(self):
+        for i in range (23,len(self.vipchannelinfo) + 1):
+            if self.vipchannelinfo[i-1][3] == True:
+                self.add_nav_item(self.vipchannelinfo[i-1][0],
+                                  'true',
+                                  str(i),
+                                  False,
+                                  urllib.quote_plus(__scraper__.channelurl %i),
+                                  '6',
+                                  self.vipchannelinfo[i-1][1])
         xbmcplugin.endOfDirectory(__handle__)
 
     # Adds navigation items

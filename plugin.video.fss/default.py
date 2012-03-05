@@ -1,6 +1,6 @@
 #XBMC liveonlinefooty.com Plugin
 #
-#Copyright (C) 2011  mclog and myksterx
+#Copyright (C) 2011-2012  mclog and myksterx
 #Official Development Thread - http://forum.xbmc.org/showthread.php?t=97494
 #Official Release Thread - http://forum.xbmc.org/showthread.php?p=776481#post776481
 #
@@ -66,14 +66,16 @@ if mode==None or url==None or len(url)<1:
 elif mode==1:
     __navigator__.list_channels()
 elif mode==2:
-    __navigator__.list_daily_schedule('Today', '')
+    __navigator__.list_vipchannels()
 elif mode==3:
-    __navigator__.list_schedule()
+    __navigator__.list_daily_schedule('Today', '')
 elif mode==4:
-    __settings__.openSettings(url=sys.argv[0])
+    __navigator__.list_schedule()
 elif mode==5:
-    __navigator__.play_stream(url)
+    __settings__.openSettings(url=sys.argv[0])
 elif mode==6:
+    __navigator__.play_stream(url)
+elif mode==7:
     __navigator__.list_daily_schedule('Someday', url)
 
 
