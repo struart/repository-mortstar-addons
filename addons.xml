@@ -41,7 +41,7 @@
 </addon>
 
 <addon id="plugin.audio.mflow"
-	   version="0.4.4"
+	   version="0.4.5"
 	   name="mFlow"
 	   provider-name="Sam Price">
 	<requires>
@@ -57,6 +57,7 @@
 	  <description>A plugin for streaming music service mFlow.</description>
 	  <platform>all</platform>
 	</extension>
+	<broken>mFlow closed up shop</broken>
 </addon>
 
 <addon id="plugin.video.fss" name="FlashSportStreams" version="1.4.2" provider-name="myksterx and mclog">

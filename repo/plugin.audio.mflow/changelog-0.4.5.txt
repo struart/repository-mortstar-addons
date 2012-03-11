@@ -1,3 +1,6 @@
+[B] Version 0.4.5 [/B]
+mFlow is no more. Addon marked as broken
+
 [B] Version 0.4.4 [/B]
 Fixed Trending Tags
 Fixed crashes when launching the plugin from Favourites menu

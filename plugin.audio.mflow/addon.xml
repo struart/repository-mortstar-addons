@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <addon id="plugin.audio.mflow" 
-	   version="0.4.4" 
+	   version="0.4.5" 
 	   name="mFlow" 
 	   provider-name="Sam Price"> 
 	<requires>
@@ -15,5 +15,6 @@
 	  <summary>mFlow audio plugin</summary>
 	  <description>A plugin for streaming music service mFlow.</description> 
 	  <platform>all</platform> 
-	</extension> 
+	</extension>
+	<broken>mFlow closed up shop</broken>
 </addon>
