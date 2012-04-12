@@ -1,12 +1,21 @@
+[B]1.6.0[/B]
+- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.5.0) i.e:
+	added: Set title scraping from TMDb
+	added: Get Trailers from TMDb
+	refactored: scraper settings
+	fixed: outline was not scraped under certain circumtances
+
 [B]1.5.2[/B]
-- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.3.5) i.e. "added: prioritize 'imdb display title' when scraping AKA titles"
+- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.3.5) i.e:
+	added: prioritize 'imdb display title' when scraping AKA titles
 
 [B]1.5.1[/B]
 - Added: Movie set from TheMovieDB
 - Added: Optional prefix for certification, required for display of certificate logos in some skins
 
 [B]1.4.8[/B]
-- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.3.4) i.e. "fixed: factored out genres to common"
+- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.3.4) i.e:
+	fixed: factored out genres to common
 
 [B]1.4.7[/B]
 - Fixed: Matched Team XBMC's IMDb changes to scrape counrty and genre + bumped common imdb for director and writer
@@ -15,34 +24,42 @@
 - Fixed: Bumped common IMDb version requirement
 
 [B]1.4.5[/B]
-- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.3.2) i.e. "added: option to scrape trailer links directly from YouTube, credits to ZackDepp"
+- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.3.2) i.e:
+	added: option to scrape trailer links directly from YouTube, credits to ZackDepp
 
 [B]1.4.1[/B]
-- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.2.6) i.e. "fixed: Originaltitle some time contains 'IMDb - ' string"
+- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.2.6) i.e:
+	fixed: Originaltitle some time contains 'IMDb - ' string
 
 [B]1.4.0[/B]
 - Fixed: All Critics score scraping (thanks freakshow33)
 
 [B]1.3.9[/B]
-- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.2.5) i.e. "fixed: IMDb rating, MPAA rating and plot outline after site changes"
+- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.2.5) i.e:
+	fixed: IMDb rating, MPAA rating and plot outline after site changes
 
 [B]1.3.8[/B]
 - Fixed: MPAA and outline scraping from IMDb due to site changes
 
 [B]1.3.7[/B]
-- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.2.4) i.e. "fixed: missing imdb ID in search results due to site changes"
+- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.2.4) i.e:
+	fixed: missing imdb ID in search results due to site changes
 
 [B]1.3.6[/B]
-- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.2.3) i.e. "fixed: IMDb rating" (Probably unnecessary for this scraper but the option is there if needed) 
+- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.2.3) i.e:
+	fixed: IMDb rating
 
 [B]1.3.5[/B]
-- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.2.2) i.e. "fixed: make sure imdb ID picked up correctly from international sites"
+- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.2.2) i.e:
+	fixed: make sure imdb ID picked up correctly from international sites
 
 [B]1.3.4[/B]
-- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.2.1) i.e. "fixed: wrong imdb ID detection other certain circumtances"
+- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.2.1) i.e:
+	fixed: wrong imdb ID detection other certain circumtances
 
 [B]1.3.3[/B]
-- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.2.0) i.e. "Better USA/International title recognition + make NfoUrl imdb site independent"
+- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.2.0) i.e:
+	fixed: Better USA/International title recognition + make NfoUrl imdb site independent
 
 [B]1.3.2[/B]
 - Fixed: 'No consensus yet.' at Rotten Tomatoes returns no value for correct fallback to IMDb outline
@@ -55,7 +72,8 @@
 - Added: Choose certification from different countries (initially available USA, UK and Australia)
 
 [B]1.2.2[/B]
-- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.1.9) i.e. "fixed: actor roles and remove scraping of imdb trailers"
+- Fixed: Brought inline with Team XBMC's IMDb scraper changes (version 2.1.9) i.e:
+	fixed: actor roles and remove scraping of imdb trailers
 
 [B]1.2.0[/B]
 - Changed: Rotten Tomatoes functions extracted to external scraping library
