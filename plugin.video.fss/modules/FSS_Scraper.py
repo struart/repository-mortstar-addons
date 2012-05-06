@@ -16,7 +16,7 @@ class FSS_Scraper:
 
     def __init__(self):
         # URL's
-        self.baseurl = 'http://www.flashsportstreams.tv/'
+        self.baseurl = 'http://www.flashsportstreams.biz/'
         self.loginurl = ''.join([self.baseurl, 'forum/login.php?do=login'])
         self.memberurl = ''.join([self.baseurl, 'forum/view.php?pg=home&styleid=1'])
         self.channelurl = ''.join([self.baseurl, 'forum/view.php?pg=vip%sxbmc'])

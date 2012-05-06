@@ -1,3 +1,6 @@
+[B]Version 1.4.3[/B]
+- fixed login problem due to new domain
+
 [B]Version 1.4.2[/B]
 - removed xbmc portal in schedule
 - added Sky Sports F1 channel

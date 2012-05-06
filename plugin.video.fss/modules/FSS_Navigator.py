@@ -72,7 +72,35 @@ class FSS_Navigator:
                             ('Sky Movies 2', 'SKYMOVIES.png', 'vip28', True)]
 
         # VIP Channel Info Array
-        self.vipchannelinfo = [('VIP 29', 'none.png', 'vip29', True),
+        self.vipchannelinfo = [('Sky Sports 1','SkySports1.png','vip1', True),
+                               ('Sky Sports 2','SkySports2.png','vip2', True),
+                               ('Sky Sports 3','SkySports3.png','vip3', True),
+                               ('Sky Sports 4','SkySports4.png','vip4', True),
+                               ('Sky Sports News','SkySportsNews.png','vip5', True),
+                               ('ESPN UK','espnuk.png','vip6', True),
+                               ('ESPN US','espnus.png','vip7', True),
+                               ('ESPN 2','espn2.png','vip8', True),
+                               ('ESPNU College Sports','espnu.png','vip9', True),
+                               ('Setanta Sports Canada','Setanta.png','vip10', True),
+                               ('Setanta Sports Australia','Setanta.png','vip11', True),
+                               ('Setanta Sports China','Setanta.png','vip12', True),
+                               ('Setanta Sports Ireland','Setanta.png','vip13', True),
+                               ('Sky Sports F1','SkySportsF1.png','vip14', True),
+                               ('Fox Soccer Channel','FSC.png','vip15', True),
+                               ('Fox Soccer Plus','FSP.png','vip16', True),
+                               ('British Eurosport', 'BritishEurosport.png', 'vip17', True),
+                               ('British Eurosport 2', 'BritishEurosport.png', 'vip18', True),
+                               ('At the Races', 'BritishEurosport.png', 'vip19', True),
+                               ('Racing UK', 'BritishEurosport.png', 'vip20', True),
+                               ('Sky News HD','SkyNewsHD.png','vip21', False),  # Channel is Silverlight - not supported
+                               ('BBC 1', 'BBC1.png', 'vip22', True),
+                               ('ITV 1', 'ITV1.png', 'vip23', True),
+                               ('Sky 1', 'SKY1.png', 'vip24', True),
+                               ('Sky Atlantic', 'SKYATLANTIC.png', 'vip25', True),
+                               ('Sky Arts', 'SKYARTS.png', 'vip26', True),
+                               ('Sky Movies 1', 'SKYMOVIES.png', 'vip27', True),
+                               ('Sky Movies 2', 'SKYMOVIES.png', 'vip28', True),
+                               ('VIP 29', 'none.png', 'vip29', True),
                                ('VIP 30', 'none.png', 'vip30', True),
 					 ('VIP 31', 'none.png', 'vip31', True),
                                ('VIP 32', 'none.png', 'vip32', True),
@@ -199,7 +227,7 @@ class FSS_Navigator:
 
     # Lists all the VIP channels in the VIP Channels page
     def list_vipchannels(self):
-        for i in range (23,len(self.vipchannelinfo) + 1):
+        for i in range (1,len(self.vipchannelinfo) + 1):
             if self.vipchannelinfo[i-1][3] == True:
                 self.add_nav_item(self.vipchannelinfo[i-1][0],
                                   'true',
