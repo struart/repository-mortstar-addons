@@ -4,6 +4,7 @@ import sys
 import urllib
 import urllib2
 from urllib2 import URLError
+import cookielib
 
 import re
 
@@ -15,16 +16,18 @@ import xbmcaddon
 from LOFChannels import Channels
 from LOFSchedule import Schedule
 
-__settings__ = xbmcaddon.Addon("plugin.video.lof");
-__handle__   = int(sys.argv[1])
-__artwork__  = os.path.join(__settings__.getAddonInfo('path'),'image')
-__chan__     = Channels()
-__sched__    = Schedule()
+__settings__    = xbmcaddon.Addon("plugin.video.lof");
+__cookiepath__  = os.path.join(xbmc.translatePath('special://profile/addon_data/plugin.video.lof'), 'cookie.lwp')
+__handle__      = int(sys.argv[1])
+__artwork__     = os.path.join(__settings__.getAddonInfo('path'),'image')
+__chan__        = Channels()
+__sched__       = Schedule()
 
 BASE_URL = 'http://www.liveonlinefooty.com/'
+BASE2_URL = 'http://www.dhmediahosting.com/'
 LOGIN_URL = ''.join([BASE_URL, 'amember/member.php'])
-SCHED_URL = ''.join([BASE_URL, 'liveschedule.php'])
-WATCH_URL = ''.join([BASE_URL, 'watchlive/'])
+SCHED_URL = ''.join([BASE2_URL, 'liveschedule.php'])
+WATCH_URL = ''.join([BASE2_URL, 'watchlive/'])
 
 class LOFNavigator:
 
@@ -39,19 +42,20 @@ class LOFNavigator:
         self.isFolder = ''
     
     def MainMenu(self):
-        print "MainMenu"
-        u=sys.argv[0]+"?url=Channels&mode=1"
-        listfolder = xbmcgui.ListItem('Channels')
-        listfolder.setInfo('video', {'Title': 'Channels'})
-        xbmcplugin.addDirectoryItem(__handle__, u, listfolder, isFolder=1)
-
-        u=sys.argv[0]+"?url=Schedule&mode=2"
-        listfolder = xbmcgui.ListItem('Schedule')
-        listfolder.setInfo('video', {'Title': 'Schedule'})
-        listfolder.setIconImage(os.path.join(__artwork__, 'calendar.png'))
-        xbmcplugin.addDirectoryItem(__handle__, u, listfolder, isFolder=1)
-
-        xbmcplugin.endOfDirectory(__handle__)
+        if self.__conn__.LoginLOF():
+            print "MainMenu"
+            u=sys.argv[0]+"?url=Channels&mode=1"
+            listfolder = xbmcgui.ListItem('Channels')
+            listfolder.setInfo('video', {'Title': 'Channels'})
+            xbmcplugin.addDirectoryItem(__handle__, u, listfolder, isFolder=1)
+    
+            u=sys.argv[0]+"?url=Schedule&mode=2"
+            listfolder = xbmcgui.ListItem('Schedule')
+            listfolder.setInfo('video', {'Title': 'Schedule'})
+            listfolder.setIconImage(os.path.join(__artwork__, 'calendar.png'))
+            xbmcplugin.addDirectoryItem(__handle__, u, listfolder, isFolder=1)
+    
+            xbmcplugin.endOfDirectory(__handle__)
 
     def ListChannels(self):
         print "NavigatorListChannels"
@@ -130,16 +134,74 @@ class LOFNavigator:
             self.addDirAction = 'ListChannelSchedule'
             self.AddDir()
         xbmcplugin.endOfDirectory(__handle__)
-        
+
+    def SelectServer(self, url):
+        print ''.join(["List Channel Servers - ", url])
+        print url
+        watchPage = self.__conn__.QueryLOF(url, "Select Server")
+        if watchPage != False:
+            print "Listing available servers"
+            servers = re.compile('<h2><a href="(.+?)" target="player">').findall(watchPage)
+            
+            #if no alternate servers found, just return back the original url
+            if not servers:
+                return url
+                
+            links = []
+            servernames = []
+            i = 1
+            links.append(url)
+            servernames.append('Server ' + str(i))
+            for link in servers:
+                i = i + 1
+                links.append(link)
+                servernames.append('Server ' + str(i))
+            
+            dialog = xbmcgui.Dialog()
+            index = dialog.select('Choose a server', servernames)
+            
+            if index >= 0:
+                return links[index]
+            else:
+                return None
+
     def PlayStream(self, url):
         print ''.join(["PlayStream - ", url])
+        print url
+        url = self.SelectServer(url)
+        print url
+        
+        #If we have no url - user canceled server selection - then do nothing
+        if not url:
+            return None
+
         watchPage = self.__conn__.QueryLOF(url, "PlayStream")
-        if watchPage != False:
+        if watchPage != False:       
             print "Building the rtmp address"
-            swfPlayer = re.search('SWFObject\(\'(.+?)\'', watchPage).group(1)
-            playPath = re.search('\'file\',\'(.+?)\'', watchPage).group(1)
-            streamer = re.search('\'streamer\',\'(.+?)\'', watchPage).group(1)
-            appUrl = re.search('rtmp://.+?/(.+?)\'\)', watchPage).group(1)
+            
+            #LOF currently has 2 different page layouts for their streams, long way to handle both
+            #Find swfPlayer
+            r = re.search('SWFObject\(\'(.+?)', watchPage)
+            if r:
+                swfPlayer = r.group(1)
+            else:
+                swfPlayer = re.search('flashplayer\': \'(.+?)\'', watchPage).group(1)
+            
+            #Find playPath
+            r = re.search('\'file\',\'(.+?)\'', watchPage)
+            if r:
+                playPath = r.group(1)
+            else:         
+                playPath = re.search('\'file\': \'(.+?)\'', watchPage).group(1)
+
+            #Find streamer
+            r = re.search('\'streamer\',\'(.+?)\'', watchPage)
+            if r:
+                streamer = r.group(1)
+            else:
+                streamer = re.search('\'streamer\': \'(.+?)\'', watchPage).group(1)
+
+            appUrl = re.search('rtmp://.+?/(.+?)\'', watchPage).group(1)
             rtmpUrl = ''.join([streamer,
                    ' playpath=', playPath,
                    ' app=', appUrl,
@@ -147,7 +209,7 @@ class LOFNavigator:
                    ' swfUrl=', swfPlayer,
                    ' live=true'])
             print rtmpUrl
-	    item = xbmcgui.ListItem(path=rtmpUrl)
+            item = xbmcgui.ListItem(path=rtmpUrl)
             return xbmcplugin.setResolvedUrl(__handle__, True, item)
         else:
             print "Couldn't open playback stream"
@@ -194,16 +256,54 @@ class LOFConnect:
     def __init__(self):
         self.username  = __settings__.getSetting("username")
         self.password  = __settings__.getSetting("password")
-        self.loginData = urllib.urlencode({'amember_login' : self.username,
-                                           'amember_pass' : self.password,
-                                           'submit' : 'Login'})
+        self.url = 'http://www.dhmediahosting.com/amember/member.php'
+
+    def LoginLOF(self):
+        cj = cookielib.LWPCookieJar()
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+        urllib2.install_opener(opener)
+        req = urllib2.Request(self.url)
+        req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+
+        try:
+            response = urllib2.urlopen(req)
+            html = response.read()
+            response.close()
+            
+            id = re.search('<input type="hidden" name="login_attempt_id" value="(.+?)" />', html)
+            if id:
+                login_attempt_id = id.group(1)
+            else:
+                return False
+            
+            loginData = urllib.urlencode({'amember_login': self.username, 'amember_pass': self.password, 'login_attempt_id': login_attempt_id})
+
+            response = urllib2.urlopen(req, loginData)
+            html=response.read()
+            response.close()
+            cj.save(__cookiepath__, ignore_discard=True)
+            return True
+        except URLError, e:
+            if hasattr(e, 'reason'):
+                print 'Failed to login: ' + str(e.reason)
+                xbmc.executebuiltin("XBMC.Notification('Failed to login'," + str(e.reason) + ", 5000)")
+                return False
+            elif hasattr(e, 'code'):
+                print 'Failed to login: ' + str(e.code)
+                xbmc.executebuiltin("XBMC.Notification('Failed to login'," + str(e.code) + ", 5000)")
+                return False
+
 
     def QueryLOF(self, openurl, action):
         print ''.join(["QueryLOF - ", action])
-        opener = urllib2.build_opener()
+        print openurl
+        cj = cookielib.LWPCookieJar()
+        cj.load(__cookiepath__)
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+        
         # Login and View Page
         try:
-            response = opener.open(openurl, self.loginData).read()
+            response = opener.open(openurl).read()
             opener.close()
         except URLError, e:
             if hasattr(e, 'reason'):
