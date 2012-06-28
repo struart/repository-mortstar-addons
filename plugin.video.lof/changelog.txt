@@ -1,3 +1,10 @@
+[B]Version 2.0.4[/B] (Eldorado)
+- updated for new site layout, grabs proper rtmp address now
+- added new login check and saving of cookie, apply cookie to all page requests now
+- fixed link to schedule
+- added Channel 4HD to list
+- added alternate server selection when one is available
+
 [B]Version 2.0.3[/B]
 - fixed schedule parsing where it strips HTML tags from channel name, that was preventing schedule item from being displayed
 

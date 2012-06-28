@@ -19,6 +19,8 @@ class Channels:
         print "ParseAndAppendChannels"
         self.channelList = []
         for i in range(1,13):
+            if i == 5:
+                self.channelList.append(('channel4hd.php', 'Channel 4 HD'))
             self.channelList.append((''.join(['channel', str(i), '.php']), ''.join(['Channel ', str(i)])))
 ##        channelEntryRegex = 'a href=\"(.+?).php\" class=.+?>(.+?)</a>'
 ##        for eachChannel in re.finditer(channelEntryRegex, channelPage, re.M|re.DOTALL):
