@@ -90,22 +90,6 @@
 	</extension>
 </addon>
 
-<addon id="script.audio.spotimc" version="0.1-alpha5" name="Spotimc" provider-name="Mikel Azkolain">
-    <requires>
-        <import addon="xbmc.python" version="2.0"/>
-        <import addon="script.module.elementtree" version="1.2.7"/>
-    </requires>
-    <extension point="xbmc.python.script" library="default.py">
-        <provides>audio</provides>
-    </extension>
-    <extension point="xbmc.addon.metadata">
-        <platform>all</platform>
-        <summary>Spotimc gives you access to the Spotify music service.</summary>
-        <description>Spotimc lets you search for music, browse your playlists and play your favourite tunes right from XBMC.[CR][CR]This product uses SPOTIFY(R) CORE but is not endorsed, certified or otherwise approved in any way by Spotify. Spotify is the registered trade mark of the Spotify Group.[CR][CR]Special thanks to Seeleck for the logo and skin improvements.[CR][CR]Special thanks also for the CherryPy project, the DejaVu fonts project and the GNOME project (high contrast icons theme).</description>
-        <disclaimer>It requires a Spotify premium account.</disclaimer>
-    </extension>
-</addon>
-
 <addon id="script.lastfmplaylistgeneratorPM"
        name="Last.FM Playlist Generator (Partymode)"
        version="1.0.8"
@@ -125,5 +109,21 @@
     <summary>Last.FM Playlist Generator (Partymode)</summary>
     <description>Create smart playlists with the help of Last.FM</description>
   </extension>
+</addon>
+
+<addon id="script.audio.spotimc" version="1.0-beta1" name="Spotimc" provider-name="Mikel Azkolain">
+    <requires>
+        <import addon="xbmc.python" version="2.0"/>
+        <import addon="script.module.elementtree" version="1.2.7"/>
+    </requires>
+    <extension point="xbmc.python.script" library="default.py">
+        <provides>audio</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <summary>Spotimc gives you access to the Spotify music service.</summary>
+        <description>Spotimc lets you search for music, browse your playlists and play your favourite tunes right from XBMC.[CR][CR]This product uses SPOTIFY(R) CORE but is not endorsed, certified or otherwise approved in any way by Spotify. Spotify is the registered trade mark of the Spotify Group.[CR][CR]Special thanks to Seeleck for the logo and skin improvements.[CR][CR]Special thanks also for the CherryPy project, the DejaVu fonts project and the GNOME project (high contrast icons theme).</description>
+        <disclaimer>It requires a Spotify premium account.</disclaimer>
+    </extension>
 </addon>
 </addons>
