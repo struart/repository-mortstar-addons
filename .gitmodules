@@ -1,3 +1,0 @@
-[submodule "script.audio.spotimc"]
-	path = script.audio.spotimc
-	url = git://github.com/mazkolain/spotimc.git
