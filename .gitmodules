@@ -1,0 +1,3 @@
+[submodule "spotimc"]
+	path = spotimc
+	url = git://github.com/mazkolain/spotimc.git
