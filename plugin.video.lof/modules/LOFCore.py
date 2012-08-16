@@ -138,10 +138,10 @@ class LOFNavigator:
     def SelectServer(self, url):
         print ''.join(["List Channel Servers - ", url])
         print url
-        watchPage = self.__conn__.QueryLOF(url, "Select Server")
+        watchPage = self.__conn__.QueryLOF(url, "<span>Server</span>")
         if watchPage != False:
             print "Listing available servers"
-            servers = re.compile('<h2><a href="(.+?)" target="player">').findall(watchPage)
+            servers = re.compile('<li class=".+?"><a href="(.+?)" target="player">Server [0-9]</a></li>').findall(watchPage)
             
             #if no alternate servers found, just return back the original url
             if not servers:
@@ -154,7 +154,7 @@ class LOFNavigator:
             servernames.append('Server ' + str(i))
             for link in servers:
                 i = i + 1
-                links.append(link)
+                links.append(WATCH_URL + link)
                 servernames.append('Server ' + str(i))
             
             dialog = xbmcgui.Dialog()
@@ -181,7 +181,7 @@ class LOFNavigator:
             
             #LOF currently has 2 different page layouts for their streams, long way to handle both
             #Find swfPlayer
-            r = re.search('SWFObject\(\'(.+?)', watchPage)
+            r = re.search("SWFObject\('(.+?)'", watchPage)
             if r:
                 swfPlayer = r.group(1)
             else:

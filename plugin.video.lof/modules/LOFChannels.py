@@ -18,7 +18,7 @@ class Channels:
     def ParseAndAppendChannels(self, channelPage):
         print "ParseAndAppendChannels"
         self.channelList = []
-        for i in range(1,14):
+        for i in range(1,16):
             if i == 5:
                 self.channelList.append(('channel4hd.php', 'Channel 4 HD'))
             self.channelList.append((''.join(['channel', str(i), '.php']), ''.join(['Channel ', str(i)])))

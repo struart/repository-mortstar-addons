@@ -6,7 +6,7 @@ class Schedule:
         self.scheduleList = []
         self.chanList  = [] # Channel Name & Channel URL
         self.match = re.compile('<span.+?>(.+?) - (.+?)</span>(.+?)<span.+?>(.+?)</span>')
-        self.channel = re.compile('<a onClick=\"parent.callMe\(\'http://www.liveonlinefooty.com/watchlive/(.+?)\'\);\" href=\"#\">(.+?)</a>')
+        self.channel = re.compile('<a href="http://www.dhmediahosting.com/watchlive/(.+?)"(.+?)</a>') #<font color="">(.+?)</font>(.+?)</a>')
         self.matchInfo = re.compile('<span.+?>(.+?) - (.+?)</span>(.+?)<span.+?>(.+?)</span>')
         self.previousPage = re.compile('<h3><a href=\"/(.+?)\">(.+?)</a> \| (.+?)</h3>')
         self.nextPage = re.compile('<h3>(.+?) \| <a href=\"/(.+?)\">(.+?)</a></h3>')
@@ -32,9 +32,10 @@ class Schedule:
             # Add list of channels event is being broadcast on
             for eachChannel in self.channel.finditer(eachMatch.group(0)):
                 chanURL = eachChannel.group(1)
-                chanName = re.sub(r'<[^>]*?>', '', eachChannel.group(2))
+                chanName = re.sub(r'target="player"><[^>]*?>', '', eachChannel.group(2))
+                chanName = re.sub(r'</font>','',chanName)
                 self.chanList.append((chanURL, chanName))
-            self.scheduleList.append((matchTime, matchTitle, matchComp, self.chanList))
+            self.scheduleList.append((matchTime, matchTitle + " (" + matchComp + ")", matchComp, self.chanList))
             self.chanList = []
 
     def MoreScheduleListings(self, schedulePage):
@@ -71,16 +72,16 @@ class LOFDate:
         # Make it a timetuple
         newTimeTuple = time.localtime(newTimeStamp)
         # Finally make it a string
-        dateStrPart1 = time.strftime("%H:%M | %A ", newTimeTuple)
+        dateStrPart1 = time.strftime("%H:%M | %a ", newTimeTuple)
         dateStrPart2 = self.DateToOrdinal(newTimeTuple.tm_mday)
         dateStrPart3 = time.strftime("%b", newTimeTuple)
         dateStr = ''.join([dateStrPart1, dateStrPart2, ' ', dateStrPart3])
         return dateStr
     
     def DateFromOrdinal(self, mDate):
-        print "DateFromOrdinal"
         x = mDate.split(' ')
         removedOrdinal = ''.join([x[0], ' ', re.sub(r'[a-zA-Z]', '', x[1]), ' ', x[2]])
+        print "  removedOrdinal=" + removedOrdinal 
         return removedOrdinal
 
     def DateToOrdinal(self, mDate):
@@ -91,7 +92,6 @@ class LOFDate:
             return  str(mDate) + {1 : 'st', 2 : 'nd', 3 : 'rd'}.get(mDate % 10, "th")
 
     def DateAddYear(self, ttDay, dateStr):
-        print "DateAddYear"
         currTime = time.localtime()
         # if not December set year as this year
         if currTime.tm_mon != 12:
