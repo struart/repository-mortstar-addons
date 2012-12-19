@@ -1,0 +1,38 @@
+[B]Version 1.4.4[/B]
+- Addon marked as broken
+
+[B]Version 1.4.3[/B]
+- fixed login problem due to new domain
+
+[B]Version 1.4.2[/B]
+- removed xbmc portal in schedule
+- added Sky Sports F1 channel
+- added VIP Channels menu
+- renamed Setanta India to Setanta Ireland
+
+[B]Version 1.4.1[/B]
+- fixed streams due to site format change
+
+[B]Version 1.4.0[/B]
+- added a bunch of new channels
+- added channel number in schedule
+
+[B]Version 1.3.1[/B]
+- fixed changes to Sky Sports channels rtmp address parsing
+
+[B]Version 1.3.0[/B]
+- strengthened schedule parsing to have less daily schedule errors
+- added Todays Schedule in top level of plugin
+- added nicer channel icons
+
+[B]Version 1.2.0[/B]
+- added schedule scraping feature
+- known issue with certain channels not playing, e.g. VIP26
+
+[B]Version 1.1.0[/B]
+- added new channels
+
+[B]Version 1.0.0[/B]
+- Site login and authentication.
+- Basic playback of Channel 1 - 8.
+- Automatic Scraping of RTMP Feeds.

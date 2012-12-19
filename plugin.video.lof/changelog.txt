@@ -1,4 +1,5 @@
-YOU MUST UPDATE YOUR SYSTEM TO THE RECENT VERSION OF librtmp
+[B]Version 2.0.8[/B]
+- Addon marked as broken
 
 [B]Version 2.0.7[/B]
 - added channels 14 & 15
@@ -7,8 +8,12 @@ YOU MUST UPDATE YOUR SYSTEM TO THE RECENT VERSION OF librtmp
 [B]Version 2.0.6[/B]
 - corrected schedule to link to channel
 
+
 [B]Version 2.0.5[/B]
+
 - added Channel 13 (Sky Sports F1)
+
+
 
 [B]Version 2.0.4[/B] (Eldorado)
 - updated for new site layout, grabs proper rtmp address now

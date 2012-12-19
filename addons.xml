@@ -1,24 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="metadata.common.rt.com"
-       name="Rotten Tomatoes common scraper functions"
-       version="1.2.0"
-       provider-name="mortstar">
-  <requires>
-    <import addon="xbmc.metadata" version="1.0"/>
-  </requires>
-  <extension point="xbmc.metadata.scraper.library"
-             library="rt.xml"/>
-  <extension point="xbmc.addon.metadata">
-    <platform>all</platform>
-    <summary lang="en">RT Scraper Library</summary>
-    <description lang="en">Download ratings from www.rottentomatoes.com</description>
-  </extension>
-</addon>
-
 <addon id="metadata.imdbrt.com"
        name="IMDb + RT"
-       version="1.6.0"
+       version="1.6.1"
        provider-name="mortstar (IMDb by Team XBMC)">
   <requires>
 	<import addon="xbmc.metadata" version="1.0"/>
@@ -38,9 +22,10 @@
     <description lang="en">The Internet Movie Database (IMDb) is a HUGE collection of movie information, this addon will gather this data to populate your movie library. Rotten Tomatoes aggregates the reviews from movie critics and provides various ratings and other data which can supplement IMDb's information</description>
     <platform>all</platform>
   </extension>
+  <broken>No longer maintained. Use Universal scraper</broken>
 </addon>
 
-<addon id="plugin.video.fss" name="FlashSportStreams" version="1.4.3" provider-name="myksterx and mclog">
+<addon id="plugin.video.fss" name="FlashSportStreams" version="1.4.4" provider-name="myksterx and mclog">
     <requires>
         <import addon="xbmc.python" version="1.0"/>
     </requires>
@@ -54,9 +39,10 @@
         <description lang="en">Watch premium sports streaming services with XBMC. Requires a FlashSportStreams user account. See http://www.flashsportstreams.tv for more details.</description>
         <disclaimer lang="en">This plugin may not be legal in your country. Please check local laws before use.</disclaimer>
     </extension>
+	<broken>Site no longer available</broken>
 </addon>
 
-<addon id="plugin.video.lof" name="LiveOnlineFooty" version="2.0.7" provider-name="myksterx and mclog">
+<addon id="plugin.video.lof" name="LiveOnlineFooty" version="2.0.8" provider-name="myksterx and mclog">
     <requires>
         <import addon="xbmc.python" version="1.0"/>
     </requires>
@@ -70,6 +56,7 @@
         <description lang="en">Watch premium sports streaming services with XBMC. Requires a LiveOnlineFooty user account. See http://www.liveonlinefooty.com for more details.</description>
         <disclaimer lang="en">This plugin may not be legal in your country. Please check local laws before use.</disclaimer>
     </extension>
+	<broken>Site no longer available</broken>
 </addon>
 
 <addon	id="repository.mortstar.addons"
@@ -90,31 +77,9 @@
 	</extension>
 </addon>
 
-<addon id="script.lastfmplaylistgeneratorPM"
-       name="Last.FM Playlist Generator (Partymode)"
-       version="1.0.8"
-       provider-name="ErlendSB">
-  <requires>
-    <import addon="xbmc.python" version="1.0"/>
-    <import addon="script.module.pysqlite" version="2.5.6"/>
-    <import addon="script.module.pil" version="1.1.7"/>
-  </requires>
-  <extension point="xbmc.python.script"
-             library="default.py">
-	  <provides>executable</provides>
-  </extension>
-  <extension point="xbmc.addon.metadata">
-    <platform>all</platform>
-    <minversion>1</minversion>
-    <summary>Last.FM Playlist Generator (Partymode)</summary>
-    <description>Create smart playlists with the help of Last.FM</description>
-  </extension>
-</addon>
-
-<addon id="script.audio.spotimc" version="1.0-beta1" name="Spotimc" provider-name="Mikel Azkolain">
+<addon id="script.audio.spotimc" version="1.0-beta3" name="Spotimc" provider-name="Mikel Azkolain">
     <requires>
         <import addon="xbmc.python" version="2.0"/>
-        <import addon="script.module.elementtree" version="1.2.7"/>
     </requires>
     <extension point="xbmc.python.script" library="default.py">
         <provides>audio</provides>
@@ -125,5 +90,26 @@
         <description>Spotimc lets you search for music, browse your playlists and play your favourite tunes right from XBMC.[CR][CR]This product uses SPOTIFY(R) CORE but is not endorsed, certified or otherwise approved in any way by Spotify. Spotify is the registered trade mark of the Spotify Group.[CR][CR]Special thanks to Seeleck for the logo and skin improvements.[CR][CR]Special thanks also for the CherryPy project, the DejaVu fonts project and the GNOME project (high contrast icons theme).</description>
         <disclaimer>It requires a Spotify premium account.</disclaimer>
     </extension>
+</addon>
+
+<addon id="script.lastfmplaylistgeneratorPM"
+       name="Last.FM Playlist Generator (Partymode)"
+       version="1.1.0"
+       provider-name="ErlendSB">
+  <requires>
+    <import addon="xbmc.python" version="1.0"/>
+    <import addon="script.module.pysqlite" version="2.5.6"/>
+    <import addon="script.module.elementtree" />
+    <import addon="script.module.simplejson" version="2.0.10"/>
+  </requires>
+  <extension point="xbmc.python.script"
+             library="default.py">
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+    <minversion>1</minversion>
+    <summary>Last.FM Playlist Generator (Partymode)</summary>
+    <description>Create smart playlists with the help of Last.FM</description>
+  </extension>
 </addon>
 </addons>
