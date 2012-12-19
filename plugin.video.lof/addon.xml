@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.lof" name="LiveOnlineFooty" version="2.0.8" provider-name="myksterx and mclog">
+<addon id="plugin.video.lof" name="LiveOnlineFooty" version="2.0.9" provider-name="myksterx and mclog">
     <requires>
         <import addon="xbmc.python" version="1.0"/>
     </requires>
@@ -12,6 +12,6 @@
         <summary lang="en">Watch LiveOnlineFooty.com with XBMC</summary>        
         <description lang="en">Watch premium sports streaming services with XBMC. Requires a LiveOnlineFooty user account. See http://www.liveonlinefooty.com for more details.</description>
         <disclaimer lang="en">This plugin may not be legal in your country. Please check local laws before use.</disclaimer>
+		<broken>Site no longer available</broken>
     </extension>
-	<broken>Site no longer available</broken>
 </addon>

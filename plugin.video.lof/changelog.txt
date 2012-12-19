@@ -1,4 +1,4 @@
-[B]Version 2.0.8[/B]
+[B]Version 2.0.9[/B]
 - Addon marked as broken
 
 [B]Version 2.0.7[/B]
