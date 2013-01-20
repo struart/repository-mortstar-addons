@@ -41,7 +41,8 @@ class MyPlayer( xbmc.Player ) :
 	timer = None
 
 
-	apiPath = "http://ws.audioscrobbler.com/2.0/?api_key=71e468a84c1f40d4991ddccc46e40f1b"
+	#apiPath = "http://ws.audioscrobbler.com/2.0/?api_key=71e468a84c1f40d4991ddccc46e40f1b"
+	apiPath = "http://ws.audioscrobbler.com/2.0/?api_key=3ae834eee073c460a250ee08979184ec"
 	
 	def __init__ ( self ):
 		if not os.path.exists(xbmc.translatePath("special://userdata/advancedsettings.xml")):
