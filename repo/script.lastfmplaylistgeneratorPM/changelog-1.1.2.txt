@@ -1,3 +1,8 @@
+1.1.2
+- Changed: Move plugin to Music's addon section
+- Changed: Remove dependency to built-in module
+- Fixed: Fix song selection when settings.xml is missing (i.e.
+         after an install on a fresh system)
 1.1.1
 - Changed: Last.FM Api key
 1.1.0
