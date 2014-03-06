@@ -1,3 +1,6 @@
+1.13
+- Fixed: Stopped after first run. 
+
 1.1.2
 - Changed: Move plugin to Music's addon section
 - Changed: Remove dependency to built-in module

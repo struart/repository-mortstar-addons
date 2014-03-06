@@ -121,8 +121,8 @@ class MyPlayer( xbmc.Player ) :
 		print "[LFM PLG(PM)] Count: " + str(countTracks)
 		for similarTrackName, matchValue, similarArtistName in similarTracks:
 			#print "Looking for: " + similarTrackName + " - " + similarArtistName + " - " + matchValue
-			similarTrackName = similarTrackName.replace("+"," ").replace("("," ").replace(")"," ").replace("&quot","''").replace("'","''").replace("&amp;","and")
-			similarArtistName = similarArtistName.replace("+"," ").replace("("," ").replace(")"," ").replace("&quot","''").replace("'","''").replace("&amp;","and")
+			similarTrackName = similarTrackName.replace("+"," ").replace("("," ").replace(")"," ").replace("&quot","''").replace("&amp;","and")
+			similarArtistName = similarArtistName.replace("+"," ").replace("("," ").replace(")"," ").replace("&quot","''").replace("&amp;","and")
 			json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "AudioLibrary.GetSongs", "params": { "properties": ["title", "artist", "album", "file", "thumbnail", "duration", "fanart"], "limits": {"end":1}, "sort": {"method":"random"}, "filter": { "and":[{"field":"title","operator":"contains","value":"%s"},{"field":"artist","operator":"contains","value":"%s"}] } }, "id": 1}' % (similarTrackName, similarArtistName)) 
 			json_query = unicode(json_query, 'utf-8', errors='ignore')
 			json_response = simplejson.loads(json_query)
@@ -131,7 +131,9 @@ class MyPlayer( xbmc.Player ) :
 				count = 0
 				for item in json_response['result']['songs']:
 					count += 1
-					artist = item["artist"]
+					artist = ""
+					if (len(item["artist"]) > 0):
+						artist = item["artist"][0]
 					trackTitle = item["title"]
 					album = item["album"]
 					trackPath = item["file"]
