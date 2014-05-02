@@ -1,4 +1,7 @@
-1.13
+1.1.4
+- Fixed: Removed unnecessary dependency check
+
+1.1.3
 - Fixed: Stopped after first run. 
 
 1.1.2
